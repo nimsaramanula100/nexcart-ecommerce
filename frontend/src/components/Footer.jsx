@@ -52,14 +52,14 @@ const Footer = () => {
             <div className="logo-icon-sm">
               <ShoppingBag size={18} />
             </div>
-            <span className="brand-title">SHEIN<span className="brand-accent">LUXE</span></span>
+            <span className="brand-title">ALORA<span className="brand-accent">LUXE</span></span>
           </div>
           <p className="footer-tagline">
             Your ultimate online fashion & lifestyle destination. Premium quality, unbeatable prices, 50+ diverse categories.
           </p>
           <div className="portfolio-badge">
             <Heart size={14} color="#ff2460" fill="#ff2460" />
-            <span>Full-Stack Portfolio Project — Node + React</span>
+            <span>Full-Stack E-Commerce Platform</span>
           </div>
         </div>
 
@@ -69,8 +69,8 @@ const Footer = () => {
             <li><Link to="/products?category=Women's%20Fashion">Women's Fashion</Link></li>
             <li><Link to="/products?category=Men's%20Fashion">Men's Fashion</Link></li>
             <li><Link to="/products?category=Shoes%20%26%20Sneakers">Shoes & Sneakers</Link></li>
-            <li><Link to="/products?category=Beauty%20%26%20Makeup">Beauty & Cosmetics</Link></li>
-            <li><Link to="/products?category=Jewelry%20%26%20Accessories">Jewelry & Accessories</Link></li>
+            <li><Link to="/products?category=Beauty%20%26%20Skincare">Beauty & Skincare</Link></li>
+            <li><Link to="/products?category=Jewelry%20%26%20Watches">Jewelry & Watches</Link></li>
           </ul>
         </div>
 
@@ -97,7 +97,7 @@ const Footer = () => {
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} SHEIN LUXE E-Commerce Platform. Portfolio Demo Project.</p>
+        <p>&copy; {new Date().getFullYear()} ALoraLuxe E-Commerce Platform. All rights reserved.</p>
         <div className="payment-badges">
           <span className="pay-badge">VISA</span>
           <span className="pay-badge">Mastercard</span>

@@ -36,15 +36,15 @@ if (process.env.NODE_ENV === 'development') {
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'online',
-    app: 'NexCart REST API',
-    tagline: 'Smart Shopping, Simplified.',
+    app: 'ALoraLuxe REST API',
+    tagline: 'Luxury Fashion & Everything, Simplified.',
     timestamp: new Date(),
   });
 });
 
 // Root Route
 app.get('/', (req, res) => {
-  res.send('NexCart API Server Running Cleanly.');
+  res.send('ALoraLuxe API Server Running Cleanly.');
 });
 
 // Mount Routes

@@ -36,10 +36,10 @@ const Navbar = () => {
     "Women's Fashion",
     "Men's Fashion",
     "Shoes & Sneakers",
-    "Bags & Luggage",
-    "Beauty & Makeup",
-    "Jewelry & Accessories",
-    "Electronics & Gadgets",
+    "Bags & Accessories",
+    "Beauty & Skincare",
+    "Jewelry & Watches",
+    "Electronics",
     "Home & Living",
   ];
 
@@ -58,11 +58,11 @@ const Navbar = () => {
 
   return (
     <header className="navbar-header">
-      {/* SHEIN Announcement Top Bar */}
+      {/* Announcement Top Bar */}
       <div className="top-promo-bar">
         <span><Zap size={14} fill="#ffb703" color="#ffb703" /> FLASH SALE: UP TO 70% OFF</span>
         <span className="desktop-only"><Percent size={14} /> FREE SHIPPING ON ORDERS OVER $49</span>
-        <span className="desktop-only"><Sparkles size={14} /> USE CODE <strong>SHEINVIP</strong> FOR 15% OFF</span>
+        <span className="desktop-only"><Sparkles size={14} /> USE CODE <strong>ALORAVIP</strong> FOR 15% OFF</span>
       </div>
 
       <div className="navbar-container">
@@ -72,8 +72,8 @@ const Navbar = () => {
             <ShoppingBag size={22} />
           </div>
           <div className="logo-text">
-            <span className="brand-title">SHEIN<span className="brand-accent">LUXE</span></span>
-            <span className="brand-tagline">TRENDY FASHION & EVERYTHING</span>
+            <span className="brand-title">ALORA<span className="brand-accent">LUXE</span></span>
+            <span className="brand-tagline">LUXURY FASHION & EVERYTHING</span>
           </div>
         </Link>
 
@@ -81,7 +81,7 @@ const Navbar = () => {
         <form onSubmit={handleSearch} className="nav-search-form desktop-only">
           <input
             type="text"
-            placeholder="Search 50+ trendy styles, shoes, beauty..."
+            placeholder="Search dresses, sneakers, handbags, perfume, watches..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="nav-search-input"

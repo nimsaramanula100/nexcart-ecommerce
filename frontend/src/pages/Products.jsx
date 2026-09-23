@@ -24,8 +24,13 @@ const Products = () => {
   }, []);
 
   useEffect(() => {
+    setKeyword(searchParams.get('keyword') || '');
+    setSelectedCategory(searchParams.get('category') || 'All');
+  }, [searchParams]);
+
+  useEffect(() => {
     fetchProducts();
-  }, [selectedCategory, sort, searchParams]);
+  }, [selectedCategory, keyword, sort, searchParams]);
 
   const fetchCategories = async () => {
     try {
@@ -58,7 +63,13 @@ const Products = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    fetchProducts();
+    const newParams = new URLSearchParams(searchParams);
+    if (keyword.trim()) {
+      newParams.set('keyword', keyword.trim());
+    } else {
+      newParams.delete('keyword');
+    }
+    setSearchParams(newParams);
   };
 
   const handleCategorySelect = (catName) => {

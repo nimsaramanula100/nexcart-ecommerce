@@ -43,7 +43,7 @@ const Login = () => {
             <ShoppingBag size={28} />
           </div>
           <h2>Welcome Back</h2>
-          <p className="auth-sub">Log in to access your NexCart account</p>
+          <p className="auth-sub">Log in to access your ALoraLuxe account</p>
         </div>
 
         {error && <div className="card badge-danger p-3 mb-3">{error}</div>}

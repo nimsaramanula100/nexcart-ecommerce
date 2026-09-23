@@ -12,7 +12,15 @@ const getProducts = async (req, res) => {
       let filtered = [...store.products];
 
       if (keyword) {
-        filtered = filtered.filter((p) => p.name.toLowerCase().includes(keyword.toLowerCase()));
+        const kw = keyword.toLowerCase();
+        filtered = filtered.filter(
+          (p) =>
+            p.name.toLowerCase().includes(kw) ||
+            (p.description && p.description.toLowerCase().includes(kw)) ||
+            (p.brand && p.brand.toLowerCase().includes(kw)) ||
+            (p.categoryName && p.categoryName.toLowerCase().includes(kw)) ||
+            (p.tags && p.tags.some((t) => t.toLowerCase().includes(kw)))
+        );
       }
       if (category && category !== 'All') {
         filtered = filtered.filter((p) => p.categoryName.toLowerCase() === category.toLowerCase());
@@ -46,7 +54,16 @@ const getProducts = async (req, res) => {
     }
 
     let query = {};
-    if (keyword) query.name = { $regex: keyword, $options: 'i' };
+    if (keyword) {
+      const regex = new RegExp(keyword, 'i');
+      query.$or = [
+        { name: regex },
+        { description: regex },
+        { brand: regex },
+        { categoryName: regex },
+        { tags: regex },
+      ];
+    }
     if (category && category !== 'All') query.categoryName = { $regex: new RegExp(`^${category}$`, 'i') };
     if (minPrice || maxPrice) {
       query.price = {};
@@ -132,7 +149,7 @@ const createProduct = async (req, res) => {
         categoryName,
         countInStock: Number(countInStock || 10),
         isFeatured: Boolean(isFeatured),
-        brand: brand || 'NexCart',
+        brand: brand || 'ALoraLuxe',
         rating: 4.8,
         numReviews: 1,
         createdAt: new Date(),

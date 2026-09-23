@@ -60,10 +60,10 @@ const AdminProducts = () => {
       originalPrice: '',
       description: '',
       imageUrl: '',
-      categoryName: categories[0]?.name || 'Electronics',
+      categoryName: categories[0]?.name || "Women's Fashion",
       countInStock: 10,
       isFeatured: false,
-      brand: 'NexCart',
+      brand: 'ALoraLuxe',
     });
     setIsModalOpen(true);
   };
@@ -79,7 +79,7 @@ const AdminProducts = () => {
       categoryName: prod.categoryName,
       countInStock: prod.countInStock,
       isFeatured: prod.isFeatured || false,
-      brand: prod.brand || 'NexCart',
+      brand: prod.brand || 'ALoraLuxe',
     });
     setIsModalOpen(true);
   };
@@ -253,12 +253,14 @@ const AdminProducts = () => {
                     {categories.map((c) => (
                       <option key={c._id} value={c.name}>{c.name}</option>
                     ))}
+                    <option value="Women's Fashion">Women's Fashion</option>
+                    <option value="Men's Fashion">Men's Fashion</option>
+                    <option value="Shoes & Sneakers">Shoes & Sneakers</option>
+                    <option value="Bags & Accessories">Bags & Accessories</option>
+                    <option value="Beauty & Skincare">Beauty & Skincare</option>
+                    <option value="Jewelry & Watches">Jewelry & Watches</option>
                     <option value="Electronics">Electronics</option>
-                    <option value="Wearables">Wearables</option>
-                    <option value="Audio">Audio</option>
-                    <option value="Gaming">Gaming</option>
-                    <option value="Fashion">Fashion</option>
-                    <option value="Smart Home">Smart Home</option>
+                    <option value="Home & Living">Home & Living</option>
                   </select>
                 </div>
 
