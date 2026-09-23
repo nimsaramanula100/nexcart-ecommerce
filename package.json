@@ -1,0 +1,10 @@
+{
+  "name": "nexcart-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NexCart Full-Stack E-Commerce Platform",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "start": "cd backend && npm start"
+  }
+}
