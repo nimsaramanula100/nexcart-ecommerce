@@ -1,12 +1,24 @@
 import axios from 'axios';
 
-const API_BASE_URL =
+let rawBaseUrl =
   import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_API_BASE_URL ||
   '/api';
 
+if (!rawBaseUrl || rawBaseUrl === 'undefined' || rawBaseUrl.trim() === '') {
+  rawBaseUrl = '/api';
+}
+
+// Normalize trailing slashes and ensure /api path prefix if missing from absolute backend URL
+if (rawBaseUrl.startsWith('http')) {
+  rawBaseUrl = rawBaseUrl.replace(/\/+$/, '');
+  if (!rawBaseUrl.endsWith('/api')) {
+    rawBaseUrl += '/api';
+  }
+}
+
 const API = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: rawBaseUrl,
 });
 
 // Request Interceptor: Attach Auth JWT Token

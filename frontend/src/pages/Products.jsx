@@ -32,6 +32,12 @@ const Products = () => {
     fetchProducts();
   }, [selectedCategory, keyword, sort, searchParams]);
 
+  const isCategorySelected = (catName) => {
+    const current = (selectedCategory || '').trim().toLowerCase();
+    const target = (catName || '').trim().toLowerCase();
+    return current === target;
+  };
+
   const fetchCategories = async () => {
     try {
       const { data } = await API.get('/categories');
@@ -46,15 +52,35 @@ const Products = () => {
     setLoading(true);
     try {
       const params = {};
-      if (keyword) params.keyword = keyword;
-      if (selectedCategory && selectedCategory !== 'All') params.category = selectedCategory;
+      const trimmedKeyword = keyword ? keyword.trim() : '';
+      if (trimmedKeyword) params.keyword = trimmedKeyword;
+
+      const cleanCategory = (selectedCategory || '').trim();
+      if (cleanCategory && cleanCategory.toLowerCase() !== 'all') {
+        params.category = cleanCategory;
+      }
       if (minPrice) params.minPrice = minPrice;
       if (maxPrice) params.maxPrice = maxPrice;
       if (sort) params.sort = sort;
 
       const { data } = await API.get('/products', { params });
-      setProducts(Array.isArray(data?.products) ? data.products : Array.isArray(data) ? data : []);
-      setTotalProducts(data?.totalProducts || 0);
+      const fetchedProducts = Array.isArray(data?.products)
+        ? data.products
+        : Array.isArray(data)
+        ? data
+        : [];
+
+      if (fetchedProducts.length === 0) {
+        console.warn('[Products Debug] API returned empty products list:', {
+          endpoint: '/products',
+          params,
+          responseData: data,
+          apiBaseURL: API.defaults.baseURL,
+        });
+      }
+
+      setProducts(fetchedProducts);
+      setTotalProducts(data?.totalProducts !== undefined ? data.totalProducts : fetchedProducts.length);
     } catch (err) {
       console.error('Error fetching products:', err);
       setProducts([]);
@@ -76,12 +102,17 @@ const Products = () => {
   };
 
   const handleCategorySelect = (catName) => {
-    setSelectedCategory(catName);
-    const newParams = new URLSearchParams(searchParams);
-    if (catName === 'All') {
-      newParams.delete('category');
-    } else {
-      newParams.set('category', catName);
+    const cleanCat = (catName || '').trim();
+    setSelectedCategory(cleanCat);
+
+    // Reset conflicting filter parameters (like price range and keyword) when switching categories
+    setKeyword('');
+    setMinPrice('');
+    setMaxPrice('');
+
+    const newParams = new URLSearchParams();
+    if (cleanCat && cleanCat.toLowerCase() !== 'all') {
+      newParams.set('category', cleanCat);
     }
     setSearchParams(newParams);
   };
@@ -105,7 +136,7 @@ const Products = () => {
       {/* Category Pills Slider */}
       <div className="category-horizontal-pills">
         <button
-          className={`pill-btn ${selectedCategory === 'All' ? 'active' : ''}`}
+          className={`pill-btn ${isCategorySelected('All') ? 'active' : ''}`}
           onClick={() => handleCategorySelect('All')}
         >
           All Items
@@ -113,7 +144,7 @@ const Products = () => {
         {Array.isArray(categories) && categories?.map((cat) => (
           <button
             key={cat._id}
-            className={`pill-btn ${selectedCategory === cat.name ? 'active' : ''}`}
+            className={`pill-btn ${isCategorySelected(cat.name) ? 'active' : ''}`}
             onClick={() => handleCategorySelect(cat.name)}
           >
             {cat.name}
@@ -177,7 +208,7 @@ const Products = () => {
         <aside className="filters-sidebar card">
           <div className="sidebar-header">
             <span className="sidebar-title"><SlidersHorizontal size={18} /> Filters</span>
-            {(selectedCategory !== 'All' || keyword || minPrice || maxPrice) && (
+            {(!isCategorySelected('All') || keyword || minPrice || maxPrice) && (
               <button className="reset-btn" onClick={resetFilters}>
                 <RefreshCw size={12} /> Clear All
               </button>
@@ -189,7 +220,7 @@ const Products = () => {
             <h4>Categories</h4>
             <div className="category-list">
               <button
-                className={`cat-pill ${selectedCategory === 'All' ? 'active' : ''}`}
+                className={`cat-pill ${isCategorySelected('All') ? 'active' : ''}`}
                 onClick={() => handleCategorySelect('All')}
               >
                 All Departments
@@ -197,7 +228,7 @@ const Products = () => {
               {Array.isArray(categories) && categories?.map((cat) => (
                 <button
                   key={cat._id}
-                  className={`cat-pill ${selectedCategory === cat.name ? 'active' : ''}`}
+                  className={`cat-pill ${isCategorySelected(cat.name) ? 'active' : ''}`}
                   onClick={() => handleCategorySelect(cat.name)}
                 >
                   {cat.name}
