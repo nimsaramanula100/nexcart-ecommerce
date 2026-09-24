@@ -1,5 +1,6 @@
 const Product = require('../models/Product');
 const store = require('../config/inMemoryStore');
+const autoSeed = require('../utils/autoSeed');
 
 // @desc    Fetch all products with search, filter, and sorting
 // @route   GET /api/products
@@ -7,6 +8,10 @@ const store = require('../config/inMemoryStore');
 const getProducts = async (req, res) => {
   try {
     const { keyword, category, minPrice, maxPrice, sort, page = 1, limit = 12 } = req.query;
+
+    if (!global.IS_IN_MEMORY_MODE) {
+      await autoSeed();
+    }
 
     if (global.IS_IN_MEMORY_MODE) {
       let filtered = [...store.products];
@@ -99,6 +104,9 @@ const getProducts = async (req, res) => {
 // @access  Public
 const getFeaturedProducts = async (req, res) => {
   try {
+    if (!global.IS_IN_MEMORY_MODE) {
+      await autoSeed();
+    }
     if (global.IS_IN_MEMORY_MODE) {
       const featured = store.products.filter((p) => p.isFeatured).slice(0, 8);
       return res.json(featured);
@@ -223,6 +231,9 @@ const deleteProduct = async (req, res) => {
 // @access  Public
 const getTrendingProducts = async (req, res) => {
   try {
+    if (!global.IS_IN_MEMORY_MODE) {
+      await autoSeed();
+    }
     if (global.IS_IN_MEMORY_MODE) {
       const trending = store.products.filter((p) => p.isTrending || p.soldCount > 200).slice(0, 10);
       return res.json(trending);
@@ -239,6 +250,9 @@ const getTrendingProducts = async (req, res) => {
 // @access  Public
 const getNewArrivals = async (req, res) => {
   try {
+    if (!global.IS_IN_MEMORY_MODE) {
+      await autoSeed();
+    }
     if (global.IS_IN_MEMORY_MODE) {
       const newArrivals = store.products.filter((p) => p.isNewArrival).slice(0, 10);
       return res.json(newArrivals);

@@ -1,8 +1,12 @@
 const Category = require('../models/Category');
 const store = require('../config/inMemoryStore');
+const autoSeed = require('../utils/autoSeed');
 
 const getCategories = async (req, res) => {
   try {
+    if (!global.IS_IN_MEMORY_MODE) {
+      await autoSeed();
+    }
     if (global.IS_IN_MEMORY_MODE) {
       return res.json(store.categories);
     }
