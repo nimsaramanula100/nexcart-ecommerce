@@ -175,7 +175,7 @@ const Navbar = () => {
           <Link to="/products" className="cat-item hot-cat">
             <Flame size={15} color="#ff2460" /> ALL CATEGORIES
           </Link>
-          {categories.map((cat) => (
+          {Array.isArray(categories) && categories?.map((cat) => (
             <Link key={cat} to={`/products?category=${encodeURIComponent(cat)}`} className="cat-item">
               {cat}
             </Link>
@@ -204,7 +204,7 @@ const Navbar = () => {
           <Link to="/wishlist" onClick={() => setMobileMenuOpen(false)}>My Wishlist ({wishlistCount})</Link>
           
           <div className="mobile-cat-header">Categories</div>
-          {categories.map((cat) => (
+          {Array.isArray(categories) && categories?.map((cat) => (
             <Link
               key={cat}
               to={`/products?category=${encodeURIComponent(cat)}`}

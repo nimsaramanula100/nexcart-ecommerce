@@ -44,12 +44,16 @@ const Home = () => {
           API.get('/products/new-arrivals'),
           API.get('/categories'),
         ]);
-        setFeaturedProducts(featRes.data);
-        setTrendingProducts(trendRes.data.slice(0, 8));
-        setNewArrivals(newRes.data.slice(0, 8));
-        setCategories(catRes.data);
+        setFeaturedProducts(Array.isArray(featRes.data) ? featRes.data : []);
+        setTrendingProducts(Array.isArray(trendRes.data) ? trendRes.data.slice(0, 8) : []);
+        setNewArrivals(Array.isArray(newRes.data) ? newRes.data.slice(0, 8) : []);
+        setCategories(Array.isArray(catRes.data) ? catRes.data : []);
       } catch (err) {
         console.error('Error fetching home data:', err);
+        setFeaturedProducts([]);
+        setTrendingProducts([]);
+        setNewArrivals([]);
+        setCategories([]);
       } finally {
         setLoading(false);
       }
@@ -140,7 +144,7 @@ const Home = () => {
         </div>
 
         <div className="category-tile-grid">
-          {categories.map((cat) => (
+          {Array.isArray(categories) && categories?.map((cat) => (
             <Link
               key={cat._id}
               to={`/products?category=${encodeURIComponent(cat.name)}`}
@@ -180,7 +184,7 @@ const Home = () => {
           </div>
         ) : (
           <div className="grid-products">
-            {trendingProducts.map((product) => (
+            {Array.isArray(trendingProducts) && trendingProducts?.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
           </div>
@@ -221,7 +225,7 @@ const Home = () => {
           </div>
         ) : (
           <div className="grid-products">
-            {newArrivals.map((product) => (
+            {Array.isArray(newArrivals) && newArrivals?.map((product) => (
               <ProductCard key={product._id} product={product} />
             ))}
           </div>

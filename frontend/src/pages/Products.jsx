@@ -35,9 +35,10 @@ const Products = () => {
   const fetchCategories = async () => {
     try {
       const { data } = await API.get('/categories');
-      setCategories(data);
+      setCategories(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Error fetching categories:', err);
+      setCategories([]);
     }
   };
 
@@ -52,10 +53,12 @@ const Products = () => {
       if (sort) params.sort = sort;
 
       const { data } = await API.get('/products', { params });
-      setProducts(data.products || []);
-      setTotalProducts(data.totalProducts || 0);
+      setProducts(Array.isArray(data?.products) ? data.products : Array.isArray(data) ? data : []);
+      setTotalProducts(data?.totalProducts || 0);
     } catch (err) {
       console.error('Error fetching products:', err);
+      setProducts([]);
+      setTotalProducts(0);
     } finally {
       setLoading(false);
     }
@@ -107,7 +110,7 @@ const Products = () => {
         >
           All Items
         </button>
-        {categories.map((cat) => (
+        {Array.isArray(categories) && categories?.map((cat) => (
           <button
             key={cat._id}
             className={`pill-btn ${selectedCategory === cat.name ? 'active' : ''}`}
@@ -191,7 +194,7 @@ const Products = () => {
               >
                 All Departments
               </button>
-              {categories.map((cat) => (
+              {Array.isArray(categories) && categories?.map((cat) => (
                 <button
                   key={cat._id}
                   className={`cat-pill ${selectedCategory === cat.name ? 'active' : ''}`}
@@ -236,7 +239,7 @@ const Products = () => {
         <main className="products-main">
           <div className="results-meta">
             <span className="results-count">
-              Showing <strong>{products.length}</strong> of <strong>{totalProducts}</strong> Items
+              Showing <strong>{Array.isArray(products) ? products.length : 0}</strong> of <strong>{totalProducts}</strong> Items
             </span>
           </div>
 
@@ -248,9 +251,9 @@ const Products = () => {
                 </div>
               ))}
             </div>
-          ) : products.length > 0 ? (
+          ) : Array.isArray(products) && products.length > 0 ? (
             <div className={`grid-products cols-${gridCols}`}>
-              {products.map((product) => (
+              {Array.isArray(products) && products?.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
             </div>

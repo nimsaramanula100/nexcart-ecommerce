@@ -35,9 +35,10 @@ const AdminProducts = () => {
     setLoading(true);
     try {
       const { data } = await API.get('/products?limit=50');
-      setProducts(data.products || []);
+      setProducts(Array.isArray(data?.products) ? data.products : Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to fetch products:', err);
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -46,9 +47,10 @@ const AdminProducts = () => {
   const fetchCategories = async () => {
     try {
       const { data } = await API.get('/categories');
-      setCategories(data);
+      setCategories(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to fetch categories:', err);
+      setCategories([]);
     }
   };
 
@@ -121,8 +123,8 @@ const AdminProducts = () => {
     }
   };
 
-  const filteredProducts = products.filter((p) =>
-    p.name.toLowerCase().includes(keyword.toLowerCase())
+  const filteredProducts = (Array.isArray(products) ? products : []).filter((p) =>
+    p?.name?.toLowerCase().includes(keyword.toLowerCase())
   );
 
   return (
@@ -160,7 +162,7 @@ const AdminProducts = () => {
       <div className="card p-0">
         {loading ? (
           <div className="p-4 text-center">Loading Inventory...</div>
-        ) : filteredProducts.length > 0 ? (
+        ) : Array.isArray(filteredProducts) && filteredProducts.length > 0 ? (
           <table className="admin-table">
             <thead>
               <tr>
@@ -173,7 +175,7 @@ const AdminProducts = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredProducts.map((p) => (
+              {Array.isArray(filteredProducts) && filteredProducts?.map((p) => (
                 <tr key={p._id}>
                   <td>
                     <div className="prod-cell">
@@ -250,7 +252,7 @@ const AdminProducts = () => {
                     value={formData.categoryName}
                     onChange={(e) => setFormData({ ...formData, categoryName: e.target.value })}
                   >
-                    {categories.map((c) => (
+                    {Array.isArray(categories) && categories?.map((c) => (
                       <option key={c._id} value={c.name}>{c.name}</option>
                     ))}
                     <option value="Women's Fashion">Women's Fashion</option>

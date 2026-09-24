@@ -8,29 +8,32 @@ export const WishlistProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState(() => {
     try {
       const saved = localStorage.getItem('nexcart_wishlist');
-      return saved ? JSON.parse(saved) : [];
+      const parsed = saved ? JSON.parse(saved) : [];
+      return Array.isArray(parsed) ? parsed : [];
     } catch {
       return [];
     }
   });
 
   useEffect(() => {
-    localStorage.setItem('nexcart_wishlist', JSON.stringify(wishlist));
+    localStorage.setItem('nexcart_wishlist', JSON.stringify(Array.isArray(wishlist) ? wishlist : []));
   }, [wishlist]);
 
   const addToWishlist = (product) => {
     setWishlist((prev) => {
-      if (prev.some((item) => item._id === product._id)) return prev;
-      return [...prev, product];
+      const safePrev = Array.isArray(prev) ? prev : [];
+      if (safePrev.some((item) => item._id === product._id)) return safePrev;
+      return [...safePrev, product];
     });
   };
 
   const removeFromWishlist = (productId) => {
-    setWishlist((prev) => prev.filter((item) => item._id !== productId));
+    setWishlist((prev) => (Array.isArray(prev) ? prev : []).filter((item) => item._id !== productId));
   };
 
   const isInWishlist = (productId) => {
-    return wishlist.some((item) => item._id === productId);
+    const safeWishlist = Array.isArray(wishlist) ? wishlist : [];
+    return safeWishlist.some((item) => item._id === productId);
   };
 
   const toggleWishlist = (product) => {
@@ -41,15 +44,17 @@ export const WishlistProvider = ({ children }) => {
     }
   };
 
+  const safeWishlist = Array.isArray(wishlist) ? wishlist : [];
+
   return (
     <WishlistContext.Provider
       value={{
-        wishlist,
+        wishlist: safeWishlist,
         addToWishlist,
         removeFromWishlist,
         isInWishlist,
         toggleWishlist,
-        wishlistCount: wishlist.length,
+        wishlistCount: safeWishlist.length,
       }}
     >
       {children}

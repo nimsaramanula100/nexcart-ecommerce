@@ -109,7 +109,7 @@ const OrderConfirmation = () => {
           <h3>Order Items</h3>
           <hr className="divider" />
           <div className="confirm-items-list">
-            {order.orderItems?.map((item) => (
+            {Array.isArray(order?.orderItems) && order.orderItems?.map((item) => (
               <div key={item._id} className="confirm-item-row">
                 <img src={item.imageUrl} alt={item.name} className="confirm-thumb" />
                 <div className="confirm-item-info">

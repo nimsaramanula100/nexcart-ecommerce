@@ -35,11 +35,17 @@ const ProductDetails = () => {
         if (data.sizes && data.sizes.length > 0) setSelectedSize(data.sizes[0]);
 
         if (data.categoryName) {
-          const relRes = await API.get(`/products?category=${encodeURIComponent(data.categoryName)}&limit=5`);
-          setRelatedProducts(relRes.data.products.filter((p) => p._id !== data._id));
+          try {
+            const relRes = await API.get(`/products?category=${encodeURIComponent(data.categoryName)}&limit=5`);
+            const relProds = Array.isArray(relRes.data?.products) ? relRes.data.products : Array.isArray(relRes.data) ? relRes.data : [];
+            setRelatedProducts(relProds.filter((p) => p && p._id !== data._id));
+          } catch {
+            setRelatedProducts([]);
+          }
         }
       } catch (err) {
         setError('Product not found or invalid URL');
+        setRelatedProducts([]);
       } finally {
         setLoading(false);
       }
@@ -83,7 +89,7 @@ const ProductDetails = () => {
 
   const isOutOfStock = product.countInStock <= 0;
   const isWishlisted = isInWishlist(product._id);
-  const allImages = [product.imageUrl, ...(product.images || [])];
+  const allImages = [product.imageUrl, ...(Array.isArray(product.images) ? product.images : [])];
 
   return (
     <div className="product-details-page fade-in">
@@ -95,7 +101,7 @@ const ProductDetails = () => {
         {/* Left Column: Multi-Image Thumbnail Gallery */}
         <div className="gallery-section">
           <div className="thumbnails-col">
-            {allImages.map((img, idx) => (
+            {Array.isArray(allImages) && allImages?.map((img, idx) => (
               <button
                 key={idx}
                 className={`thumb-btn ${selectedImage === img ? 'active' : ''}`}
@@ -156,11 +162,11 @@ const ProductDetails = () => {
           </div>
 
           {/* Color Selection */}
-          {product.colors && product.colors.length > 0 && (
+          {Array.isArray(product.colors) && product.colors.length > 0 && (
             <div className="choice-section">
               <label className="choice-label">COLOR: <strong>{selectedColor}</strong></label>
               <div className="color-swatches">
-                {product.colors.map((c) => (
+                {Array.isArray(product.colors) && product.colors?.map((c) => (
                   <button
                     key={c}
                     className={`color-btn ${selectedColor === c ? 'active' : ''}`}
@@ -181,11 +187,11 @@ const ProductDetails = () => {
           )}
 
           {/* Size Selection */}
-          {product.sizes && product.sizes.length > 0 && (
+          {Array.isArray(product.sizes) && product.sizes.length > 0 && (
             <div className="choice-section">
               <label className="choice-label">SIZE: <strong>{selectedSize}</strong></label>
               <div className="size-buttons">
-                {product.sizes.map((s) => (
+                {Array.isArray(product.sizes) && product.sizes?.map((s) => (
                   <button
                     key={s}
                     className={`size-btn ${selectedSize === s ? 'active' : ''}`}
@@ -314,11 +320,11 @@ const ProductDetails = () => {
       </div>
 
       {/* Related Products Section */}
-      {relatedProducts.length > 0 && (
+      {Array.isArray(relatedProducts) && relatedProducts.length > 0 && (
         <section className="related-section mt-5">
           <h2 className="mb-3">YOU MIGHT ALSO LIKE</h2>
           <div className="grid-products">
-            {relatedProducts.map((relProd) => (
+            {Array.isArray(relatedProducts) && relatedProducts?.map((relProd) => (
               <ProductCard key={relProd._id} product={relProd} />
             ))}
           </div>

@@ -12,9 +12,10 @@ const Orders = () => {
     const fetchMyOrders = async () => {
       try {
         const { data } = await API.get('/orders/myorders');
-        setOrders(data);
+        setOrders(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Failed to fetch user orders:', err);
+        setOrders([]);
       } finally {
         setLoading(false);
       }
@@ -47,7 +48,7 @@ const Orders = () => {
           <div className="skeleton" style={{ height: '80px', marginBottom: '1rem' }}></div>
           <div className="skeleton" style={{ height: '80px' }}></div>
         </div>
-      ) : orders.length === 0 ? (
+      ) : !Array.isArray(orders) || orders.length === 0 ? (
         <div className="card text-center fade-in" style={{ padding: '4rem 2rem' }}>
           <Package size={48} className="text-muted mb-2" />
           <h3>No Orders Found</h3>
@@ -58,7 +59,7 @@ const Orders = () => {
         </div>
       ) : (
         <div className="orders-list">
-          {orders.map((order) => {
+          {Array.isArray(orders) && orders?.map((order) => {
             const isExpanded = expandedOrderId === order._id;
             return (
               <div key={order._id} className="order-card card">
@@ -94,9 +95,9 @@ const Orders = () => {
                     <div className="drawer-grid">
                       {/* Items */}
                       <div className="drawer-section">
-                        <h4>Items Purchased ({order.orderItems?.length})</h4>
+                        <h4>Items Purchased ({Array.isArray(order.orderItems) ? order.orderItems.length : 0})</h4>
                         <div className="items-list">
-                          {order.orderItems?.map((item) => (
+                          {Array.isArray(order.orderItems) && order.orderItems?.map((item) => (
                             <div key={item._id} className="drawer-item">
                               <img src={item.imageUrl} alt={item.name} className="thumb" />
                               <div className="info">

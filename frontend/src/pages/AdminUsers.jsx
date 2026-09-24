@@ -11,9 +11,10 @@ const AdminUsers = () => {
     const fetchUsers = async () => {
       try {
         const { data } = await API.get('/admin/users');
-        setUsers(data);
+        setUsers(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Failed to fetch users:', err);
+        setUsers([]);
       } finally {
         setLoading(false);
       }
@@ -36,7 +37,7 @@ const AdminUsers = () => {
       <div className="card p-0">
         {loading ? (
           <div className="p-4 text-center">Loading Directory...</div>
-        ) : users.length > 0 ? (
+        ) : Array.isArray(users) && users.length > 0 ? (
           <table className="admin-table">
             <thead>
               <tr>
@@ -48,7 +49,7 @@ const AdminUsers = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map((u) => (
+              {Array.isArray(users) && users?.map((u) => (
                 <tr key={u._id}>
                   <td>
                     <div className="user-table-cell">

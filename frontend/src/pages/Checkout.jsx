@@ -40,7 +40,7 @@ const Checkout = () => {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState(null);
 
-  if (cartItems.length === 0) {
+  if (!Array.isArray(cartItems) || cartItems.length === 0) {
     return (
       <div className="card text-center fade-in" style={{ padding: '4rem 2rem' }}>
         <h2>NO ITEMS IN YOUR BAG</h2>
@@ -70,7 +70,7 @@ const Checkout = () => {
     setTimeout(async () => {
       try {
         const orderPayload = {
-          orderItems: cartItems.map((item) => ({
+          orderItems: (Array.isArray(cartItems) ? cartItems : []).map((item) => ({
             name: item.name,
             quantity: item.quantity,
             imageUrl: item.imageUrl,
@@ -313,11 +313,11 @@ const Checkout = () => {
 
         {/* Right Summary Panel */}
         <aside className="checkout-summary card">
-          <h3>ORDER ITEMS ({cartItems.length})</h3>
+          <h3>ORDER ITEMS ({Array.isArray(cartItems) ? cartItems.length : 0})</h3>
           <hr style={{ borderColor: 'var(--border-color)', margin: '0.5rem 0' }} />
 
           <div className="checkout-items-list">
-            {cartItems.map((item, idx) => (
+            {Array.isArray(cartItems) && cartItems?.map((item, idx) => (
               <div key={idx} className="mini-item">
                 <img src={item.imageUrl} alt={item.name} className="mini-thumb" />
                 <div className="mini-details">

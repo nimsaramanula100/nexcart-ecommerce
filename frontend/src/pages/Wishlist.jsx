@@ -7,7 +7,7 @@ import ProductCard from '../components/ProductCard';
 const Wishlist = () => {
   const { wishlist, wishlistCount } = useWishlist();
 
-  if (wishlistCount === 0) {
+  if (!Array.isArray(wishlist) || wishlistCount === 0) {
     return (
       <div className="empty-wishlist card text-center fade-in">
         <div className="icon-circle">
@@ -51,7 +51,7 @@ const Wishlist = () => {
       </div>
 
       <div className="grid-products mt-4">
-        {wishlist.map((product) => (
+        {Array.isArray(wishlist) && wishlist?.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
       </div>

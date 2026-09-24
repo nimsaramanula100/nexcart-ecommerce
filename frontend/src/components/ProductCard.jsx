@@ -75,9 +75,9 @@ const ProductCard = ({ product }) => {
         </div>
 
         {/* Color Swatch Preview (if available) */}
-        {product.colors && product.colors.length > 0 && (
+        {Array.isArray(product.colors) && product.colors.length > 0 && (
           <div className="color-swatches-preview">
-            {product.colors.slice(0, 4).map((color, idx) => (
+            {Array.isArray(product.colors) && product.colors.slice(0, 4).map((color, idx) => (
               <span
                 key={idx}
                 className="color-dot"

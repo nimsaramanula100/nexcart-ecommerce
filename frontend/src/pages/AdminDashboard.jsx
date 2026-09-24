@@ -14,6 +14,7 @@ const AdminDashboard = () => {
         setStats(data);
       } catch (err) {
         console.error('Failed to fetch admin stats:', err);
+        setStats({ totalRevenue: 0, totalOrders: 0, totalProducts: 0, totalUsers: 0, recentOrders: [], lowStockProducts: [] });
       } finally {
         setLoading(false);
       }
@@ -103,7 +104,7 @@ const AdminDashboard = () => {
           </div>
           <hr className="divider" />
 
-          {stats?.recentOrders?.length > 0 ? (
+          {Array.isArray(stats?.recentOrders) && stats.recentOrders.length > 0 ? (
             <table className="admin-table">
               <thead>
                 <tr>
@@ -114,7 +115,7 @@ const AdminDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {stats.recentOrders.map((ord) => (
+                {Array.isArray(stats?.recentOrders) && stats.recentOrders?.map((ord) => (
                   <tr key={ord._id}>
                     <td className="font-mono">#{ord._id.substring(0, 8)}</td>
                     <td>{ord.user?.name || 'Customer'}</td>
@@ -143,9 +144,9 @@ const AdminDashboard = () => {
           </div>
           <hr className="divider" />
 
-          {stats?.lowStockProducts?.length > 0 ? (
+          {Array.isArray(stats?.lowStockProducts) && stats.lowStockProducts.length > 0 ? (
             <div className="low-stock-list">
-              {stats.lowStockProducts.map((p) => (
+              {Array.isArray(stats?.lowStockProducts) && stats.lowStockProducts?.map((p) => (
                 <div key={p._id} className="low-stock-row">
                   <img src={p.imageUrl} alt={p.name} className="mini-thumb" />
                   <div className="flex-1">

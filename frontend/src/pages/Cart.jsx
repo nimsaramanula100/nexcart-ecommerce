@@ -33,7 +33,7 @@ const Cart = () => {
   const progressPercent = Math.min(100, (cartSubtotal / freeShippingThreshold) * 100);
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - cartSubtotal);
 
-  if (cartItems.length === 0) {
+  if (!Array.isArray(cartItems) || cartItems.length === 0) {
     return (
       <div className="empty-cart-container card fade-in">
         <div className="empty-icon-circle">
@@ -78,7 +78,7 @@ const Cart = () => {
   return (
     <div className="cart-page fade-in">
       <div className="page-header">
-        <h1>MY SHOPPING BAG ({cartItems.reduce((acc, item) => acc + item.quantity, 0)} ITEMS)</h1>
+        <h1>MY SHOPPING BAG ({(Array.isArray(cartItems) ? cartItems : []).reduce((acc, item) => acc + item.quantity, 0)} ITEMS)</h1>
       </div>
 
       {/* Free Shipping Progress Bar */}
@@ -108,7 +108,7 @@ const Cart = () => {
           </div>
 
           <div className="items-body">
-            {cartItems.map((item, idx) => (
+            {Array.isArray(cartItems) && cartItems?.map((item, idx) => (
               <div key={`${item._id}-${idx}`} className="cart-item-row">
                 <div className="item-product-info">
                   <img src={item.imageUrl} alt={item.name} className="item-thumb" />

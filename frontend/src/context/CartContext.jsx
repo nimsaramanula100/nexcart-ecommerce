@@ -9,7 +9,8 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
     try {
       const savedCart = localStorage.getItem('nexcart_cart');
-      return savedCart ? JSON.parse(savedCart) : [];
+      const parsed = savedCart ? JSON.parse(savedCart) : [];
+      return Array.isArray(parsed) ? parsed : [];
     } catch {
       return [];
     }
@@ -27,7 +28,7 @@ export const CartProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    localStorage.setItem('nexcart_cart', JSON.stringify(cartItems));
+    localStorage.setItem('nexcart_cart', JSON.stringify(Array.isArray(cartItems) ? cartItems : []));
   }, [cartItems]);
 
   const showToast = (text, type = 'success') => {
@@ -40,8 +41,8 @@ export const CartProvider = ({ children }) => {
   const fetchServerCart = async () => {
     try {
       const { data } = await API.get('/cart');
-      if (data && data.items) {
-        const formattedItems = data.items.map((item) => ({
+      if (data && Array.isArray(data.items)) {
+        const formattedItems = (Array.isArray(data.items) ? data.items : []).map((item) => ({
           _id: item.product?._id || item.product,
           name: item.name,
           price: item.price,
@@ -60,19 +61,20 @@ export const CartProvider = ({ children }) => {
   const addToCart = async (product, quantity = 1) => {
     const qty = Number(quantity);
     setCartItems((prevItems) => {
-      const existingIndex = prevItems.findIndex(
+      const safePrev = Array.isArray(prevItems) ? prevItems : [];
+      const existingIndex = safePrev.findIndex(
         (item) =>
           item._id === product._id &&
           item.selectedColor === product.selectedColor &&
           item.selectedSize === product.selectedSize
       );
       if (existingIndex > -1) {
-        const updated = [...prevItems];
+        const updated = [...safePrev];
         updated[existingIndex].quantity += qty;
         return updated;
       } else {
         return [
-          ...prevItems,
+          ...safePrev,
           {
             _id: product._id,
             name: product.name,
@@ -106,7 +108,7 @@ export const CartProvider = ({ children }) => {
     }
 
     setCartItems((prev) =>
-      prev.map((item) => (item._id === productId ? { ...item, quantity: qty } : item))
+      (Array.isArray(prev) ? prev : []).map((item) => (item._id === productId ? { ...item, quantity: qty } : item))
     );
 
     if (user && user.token) {
@@ -119,8 +121,9 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeFromCart = async (productId) => {
-    const targetItem = cartItems.find((i) => i._id === productId);
-    setCartItems((prev) => prev.filter((item) => item._id !== productId));
+    const safeCart = Array.isArray(cartItems) ? cartItems : [];
+    const targetItem = safeCart.find((i) => i._id === productId);
+    setCartItems((prev) => (Array.isArray(prev) ? prev : []).filter((item) => item._id !== productId));
 
     if (targetItem) {
       showToast(`Removed ${targetItem.name} from bag`, 'info');
@@ -177,8 +180,9 @@ export const CartProvider = ({ children }) => {
     showToast('Promo code removed', 'info');
   };
 
-  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const cartSubtotal = cartItems.reduce(
+  const safeCartItems = Array.isArray(cartItems) ? cartItems : [];
+  const cartCount = safeCartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const cartSubtotal = safeCartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );

@@ -18,9 +18,10 @@ const AdminOrders = () => {
     setLoading(true);
     try {
       const { data } = await API.get('/orders');
-      setOrders(data);
+      setOrders(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to fetch admin orders:', err);
+      setOrders([]);
     } finally {
       setLoading(false);
     }
@@ -37,8 +38,8 @@ const AdminOrders = () => {
   };
 
   const filteredOrders = statusFilter === 'All'
-    ? orders
-    : orders.filter((o) => o.status === statusFilter);
+    ? (Array.isArray(orders) ? orders : [])
+    : (Array.isArray(orders) ? orders : []).filter((o) => o?.status === statusFilter);
 
   return (
     <div className="admin-orders-page fade-in">
@@ -67,7 +68,7 @@ const AdminOrders = () => {
       <div className="card p-0">
         {loading ? (
           <div className="p-4 text-center">Loading Orders...</div>
-        ) : filteredOrders.length > 0 ? (
+        ) : Array.isArray(filteredOrders) && filteredOrders.length > 0 ? (
           <table className="admin-table">
             <thead>
               <tr>
@@ -80,7 +81,7 @@ const AdminOrders = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredOrders.map((ord) => (
+              {Array.isArray(filteredOrders) && filteredOrders?.map((ord) => (
                 <tr key={ord._id}>
                   <td>
                     <strong className="font-mono">#{ord._id.substring(0, 10)}...</strong>
