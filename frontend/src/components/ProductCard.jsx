@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, Star, Heart, Eye } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import { formatLkr } from '../data/localCatalog';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
@@ -97,9 +98,9 @@ const ProductCard = ({ product }) => {
         <div>
           {/* Price Row */}
           <div className="shein-card-price-row">
-            <span className="shein-price-current">${product.price?.toFixed(2)}</span>
+            <span className="shein-price-current">{formatLkr(product.price)}</span>
             {product.originalPrice > product.price && (
-              <span className="shein-price-original">${product.originalPrice?.toFixed(2)}</span>
+              <span className="shein-price-original">{formatLkr(product.originalPrice)}</span>
             )}
           </div>
 

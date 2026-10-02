@@ -11,7 +11,7 @@ const Footer = () => {
           <Truck size={24} className="benefit-icon" />
           <div>
             <h4>Express Worldwide Shipping</h4>
-            <p>Tracked delivery on all orders over $49</p>
+            <p>Tracked delivery on all orders over LKR 15,000</p>
           </div>
         </div>
         <div className="benefit-item">

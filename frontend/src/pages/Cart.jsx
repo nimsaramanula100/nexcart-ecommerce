@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Trash2, ArrowRight, ArrowLeft, Plus, Minus, Tag, Check, Truck } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { formatLkr } from '../data/localCatalog';
 
 const Cart = () => {
   const {
@@ -29,7 +30,7 @@ const Cart = () => {
     }
   };
 
-  const freeShippingThreshold = 49;
+  const freeShippingThreshold = 15000;
   const progressPercent = Math.min(100, (cartSubtotal / freeShippingThreshold) * 100);
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - cartSubtotal);
 
@@ -86,7 +87,7 @@ const Cart = () => {
         <div className="shipping-bar-text">
           <Truck size={20} color="#ff2460" />
           {remainingForFreeShipping > 0 ? (
-            <span>Add <strong>${remainingForFreeShipping.toFixed(2)}</strong> more for <strong>FREE EXPRESS SHIPPING</strong>!</span>
+            <span>Add <strong>{formatLkr(remainingForFreeShipping)}</strong> more for <strong>FREE EXPRESS SHIPPING</strong>!</span>
           ) : (
             <span style={{ color: 'var(--success)', fontWeight: 800 }}>🎉 CONGRATS! YOU UNLOCKED FREE EXPRESS SHIPPING!</span>
           )}
@@ -124,7 +125,7 @@ const Cart = () => {
                 </div>
 
                 <div className="item-price-col">
-                  ${item.price.toFixed(2)}
+                  {formatLkr(item.price)}
                 </div>
 
                 <div className="item-qty-col">
@@ -146,7 +147,7 @@ const Cart = () => {
                 </div>
 
                 <div className="item-subtotal-col">
-                  ${(item.price * item.quantity).toFixed(2)}
+                  {formatLkr(item.price * item.quantity)}
                 </div>
 
                 <div className="item-action-col">
@@ -203,20 +204,20 @@ const Cart = () => {
 
           <div className="summary-row">
             <span>Bag Subtotal</span>
-            <span className="val">${cartSubtotal.toFixed(2)}</span>
+            <span className="val">{formatLkr(cartSubtotal)}</span>
           </div>
 
           {discountAmount > 0 && (
             <div className="summary-row" style={{ color: 'var(--accent-primary)' }}>
               <span>Promo Discount</span>
-              <span className="val" style={{ color: 'var(--accent-primary)' }}>-${discountAmount.toFixed(2)}</span>
+              <span className="val" style={{ color: 'var(--accent-primary)' }}>-{formatLkr(discountAmount)}</span>
             </div>
           )}
 
           <div className="summary-row">
             <span>Shipping Fee</span>
             <span className="val">
-              {shippingFee === 0 ? <span className="free-shipping">FREE</span> : `$${shippingFee.toFixed(2)}`}
+              {shippingFee === 0 ? <span className="free-shipping">FREE</span> : formatLkr(shippingFee)}
             </span>
           </div>
 
@@ -224,7 +225,7 @@ const Cart = () => {
 
           <div className="summary-row total-row">
             <span>Estimated Total</span>
-            <span className="grand-val">${cartTotal.toFixed(2)}</span>
+            <span className="grand-val">{formatLkr(cartTotal)}</span>
           </div>
 
           <button

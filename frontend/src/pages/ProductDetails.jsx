@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ShoppingCart, Star, ShieldCheck, Truck, ArrowLeft, Plus, Minus, Heart, Check, Share2 } from 'lucide-react';
-import API from '../services/api';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import ProductCard from '../components/ProductCard';
+import { formatLkr, getProductById, getProducts } from '../data/localCatalog';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -23,34 +23,16 @@ const ProductDetails = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchProductDetails = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const { data } = await API.get(`/products/${id}`);
-        setProduct(data);
-        setSelectedImage(data.imageUrl);
-
-        if (data.colors && data.colors.length > 0) setSelectedColor(data.colors[0]);
-        if (data.sizes && data.sizes.length > 0) setSelectedSize(data.sizes[0]);
-
-        if (data.categoryName) {
-          try {
-            const relRes = await API.get(`/products?category=${encodeURIComponent(data.categoryName)}&limit=5`);
-            const relProds = Array.isArray(relRes.data?.products) ? relRes.data.products : Array.isArray(relRes.data) ? relRes.data : [];
-            setRelatedProducts(relProds.filter((p) => p && p._id !== data._id));
-          } catch {
-            setRelatedProducts([]);
-          }
-        }
-      } catch (err) {
-        setError('Product not found or invalid URL');
-        setRelatedProducts([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProductDetails();
+    const localProduct = getProductById(id);
+    setProduct(localProduct || null);
+    setSelectedImage(localProduct?.imageUrl || '');
+    setSelectedColor(localProduct?.colors?.[0] || '');
+    setSelectedSize(localProduct?.sizes?.[0] || '');
+    setRelatedProducts(localProduct
+      ? getProducts({ category: localProduct.categoryName }).filter((item) => item._id !== localProduct._id).slice(0, 4)
+      : []);
+    setError(localProduct ? null : 'Product not found or invalid URL');
+    setLoading(false);
   }, [id]);
 
   const handleAddToCart = () => {
@@ -150,13 +132,13 @@ const ProductDetails = () => {
 
           {/* Price Box */}
           <div className="shein-details-price">
-            <span className="price-main">${product.price?.toFixed(2)}</span>
+            <span className="price-main">{formatLkr(product.price)}</span>
             {product.originalPrice > product.price && (
-              <span className="price-original">${product.originalPrice?.toFixed(2)}</span>
+              <span className="price-original">{formatLkr(product.originalPrice)}</span>
             )}
             {product.originalPrice > product.price && (
               <span className="save-badge">
-                SAVE ${ (product.originalPrice - product.price).toFixed(2) } (-{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%)
+                SAVE {formatLkr(product.originalPrice - product.price)} (-{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%)
               </span>
             )}
           </div>
@@ -311,8 +293,8 @@ const ProductDetails = () => {
 
           {activeTab === 'shipping' && (
             <div className="tab-pane fade-in">
-              <p>Standard Shipping: 3-5 business days across Sri Lanka & Worldwide ($4.99 or FREE over $49).</p>
-              <p>Express Shipping: 1-2 business days with live tracking link ($9.99).</p>
+              <p>Standard Shipping: 3-5 business days across Sri Lanka & Worldwide (LKR 750 or FREE over LKR 15,000).</p>
+              <p>Express Shipping: 1-2 business days with live tracking link (LKR 1,500).</p>
               <p>Returns: 30-day return period with prepaid shipping label.</p>
             </div>
           )}

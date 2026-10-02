@@ -61,7 +61,7 @@ const Navbar = () => {
       {/* Announcement Top Bar */}
       <div className="top-promo-bar">
         <span><Zap size={14} fill="#ffb703" color="#ffb703" /> FLASH SALE: UP TO 70% OFF</span>
-        <span className="desktop-only"><Percent size={14} /> FREE SHIPPING ON ORDERS OVER $49</span>
+        <span className="desktop-only"><Percent size={14} /> FREE SHIPPING ON ORDERS OVER LKR 15,000</span>
         <span className="desktop-only"><Sparkles size={14} /> USE CODE <strong>ALORAVIP</strong> FOR 15% OFF</span>
       </div>
 

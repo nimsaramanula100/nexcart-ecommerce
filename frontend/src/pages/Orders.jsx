@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Package, Clock, ChevronDown, ChevronUp, MapPin, CreditCard, ArrowRight } from 'lucide-react';
 import API from '../services/api';
+import { formatLkr } from '../data/localCatalog';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -76,7 +77,7 @@ const Orders = () => {
 
                   <div className="order-col">
                     <span className="label">Total Amount</span>
-                    <strong className="order-price">${order.totalPrice.toFixed(2)}</strong>
+                    <strong className="order-price">{formatLkr(order.totalPrice)}</strong>
                   </div>
 
                   <div className="order-col">
@@ -102,9 +103,9 @@ const Orders = () => {
                               <img src={item.imageUrl} alt={item.name} className="thumb" />
                               <div className="info">
                                 <span className="title">{item.name}</span>
-                                <span className="sub">{item.quantity} × ${item.price.toFixed(2)}</span>
+                                <span className="sub">{item.quantity} × {formatLkr(item.price)}</span>
                               </div>
-                              <span className="total">${(item.price * item.quantity).toFixed(2)}</span>
+                              <span className="total">{formatLkr(item.price * item.quantity)}</span>
                             </div>
                           ))}
                         </div>

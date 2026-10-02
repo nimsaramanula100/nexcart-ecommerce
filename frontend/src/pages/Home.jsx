@@ -10,8 +10,8 @@ import {
   Gift,
   Award,
 } from 'lucide-react';
-import API from '../services/api';
 import ProductCard from '../components/ProductCard';
+import { categories, getProducts } from '../data/localCatalog';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -36,29 +36,12 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [featRes, trendRes, newRes, catRes] = await Promise.all([
-          API.get('/products/featured'),
-          API.get('/products/trending'),
-          API.get('/products/new-arrivals'),
-          API.get('/categories'),
-        ]);
-        setFeaturedProducts(Array.isArray(featRes.data) ? featRes.data : []);
-        setTrendingProducts(Array.isArray(trendRes.data) ? trendRes.data.slice(0, 8) : []);
-        setNewArrivals(Array.isArray(newRes.data) ? newRes.data.slice(0, 8) : []);
-        setCategories(Array.isArray(catRes.data) ? catRes.data : []);
-      } catch (err) {
-        console.error('Error fetching home data:', err);
-        setFeaturedProducts([]);
-        setTrendingProducts([]);
-        setNewArrivals([]);
-        setCategories([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+    const products = getProducts();
+    setFeaturedProducts(products.filter((product) => product.isFeatured).slice(0, 8));
+    setTrendingProducts(products.filter((product) => product.isTrending).slice(0, 8));
+    setNewArrivals(products.filter((product) => product.isNewArrival).slice(0, 8));
+    setCategories(categories);
+    setLoading(false);
   }, []);
 
   return (

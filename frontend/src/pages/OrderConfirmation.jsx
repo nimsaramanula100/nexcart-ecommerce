@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { CheckCircle2, Package, Truck, ArrowRight, Clock, MapPin } from 'lucide-react';
 import API from '../services/api';
+import { formatLkr } from '../data/localCatalog';
 
 const OrderConfirmation = () => {
   const { id } = useParams();
@@ -116,7 +117,7 @@ const OrderConfirmation = () => {
                   <strong>{item.name}</strong>
                   <span className="text-muted">Qty: {item.quantity}</span>
                 </div>
-                <span className="confirm-price">${(item.price * item.quantity).toFixed(2)}</span>
+                <span className="confirm-price">{formatLkr(item.price * item.quantity)}</span>
               </div>
             ))}
           </div>
@@ -124,7 +125,7 @@ const OrderConfirmation = () => {
           <hr className="divider" />
 
           <div className="confirm-total-box">
-            <div className="row"><span>Total Paid:</span> <strong>${order.totalPrice?.toFixed(2)}</strong></div>
+            <div className="row"><span>Total Paid:</span> <strong>{formatLkr(order.totalPrice)}</strong></div>
           </div>
         </div>
       </div>

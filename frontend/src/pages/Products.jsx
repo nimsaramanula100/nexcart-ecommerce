@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, X, ArrowUpDown, RefreshCw, Grid, LayoutGrid } from 'lucide-react';
-import API from '../services/api';
 import ProductCard from '../components/ProductCard';
+import { categories as localCategories, getProducts } from '../data/localCatalog';
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,7 +20,7 @@ const Products = () => {
   const [gridCols, setGridCols] = useState(4); // 4 or 3 grid view toggle
 
   useEffect(() => {
-    fetchCategories();
+    setCategories(localCategories);
   }, []);
 
   useEffect(() => {
@@ -39,55 +39,21 @@ const Products = () => {
   };
 
   const fetchCategories = async () => {
-    try {
-      const { data } = await API.get('/categories');
-      setCategories(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error('Error fetching categories:', err);
-      setCategories([]);
-    }
+    setCategories(localCategories);
   };
 
   const fetchProducts = async () => {
     setLoading(true);
-    try {
-      const params = {};
-      const trimmedKeyword = keyword ? keyword.trim() : '';
-      if (trimmedKeyword) params.keyword = trimmedKeyword;
-
-      const cleanCategory = (selectedCategory || '').trim();
-      if (cleanCategory && cleanCategory.toLowerCase() !== 'all') {
-        params.category = cleanCategory;
-      }
-      if (minPrice) params.minPrice = minPrice;
-      if (maxPrice) params.maxPrice = maxPrice;
-      if (sort) params.sort = sort;
-
-      const { data } = await API.get('/products', { params });
-      const fetchedProducts = Array.isArray(data?.products)
-        ? data.products
-        : Array.isArray(data)
-        ? data
-        : [];
-
-      if (fetchedProducts.length === 0) {
-        console.warn('[Products Debug] API returned empty products list:', {
-          endpoint: '/products',
-          params,
-          responseData: data,
-          apiBaseURL: API.defaults.baseURL,
-        });
-      }
-
-      setProducts(fetchedProducts);
-      setTotalProducts(data?.totalProducts !== undefined ? data.totalProducts : fetchedProducts.length);
-    } catch (err) {
-      console.error('Error fetching products:', err);
-      setProducts([]);
-      setTotalProducts(0);
-    } finally {
-      setLoading(false);
-    }
+    const fetchedProducts = getProducts({
+      category: selectedCategory,
+      keyword,
+      minPrice,
+      maxPrice,
+      sort,
+    });
+    setProducts(fetchedProducts);
+    setTotalProducts(fetchedProducts.length);
+    setLoading(false);
   };
 
   const handleSearchSubmit = (e) => {
@@ -239,7 +205,7 @@ const Products = () => {
 
           {/* Price Range Filter */}
           <div className="filter-group">
-            <h4>Price Range ($)</h4>
+            <h4>Price Range (LKR)</h4>
             <div className="price-inputs">
               <input
                 type="number"

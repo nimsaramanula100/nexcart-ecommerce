@@ -51,7 +51,11 @@ export const CartProvider = ({ children }) => {
           selectedColor: item.selectedColor,
           selectedSize: item.selectedSize,
         }));
-        setCartItems(formattedItems);
+        setCartItems((currentItems) => {
+          const localItems = currentItems.filter((item) => String(item._id).startsWith('local-'));
+          const localIds = new Set(localItems.map((item) => item._id));
+          return [...localItems, ...formattedItems.filter((item) => !localIds.has(item._id))];
+        });
       }
     } catch (error) {
       console.warn('[Cart] Server cart sync error, using local cart state.');
@@ -92,7 +96,7 @@ export const CartProvider = ({ children }) => {
 
     showToast(`Added ${product.name} to shopping bag!`);
 
-    if (user && user.token) {
+    if (user && user.token && !String(product._id).startsWith('local-')) {
       try {
         await API.post('/cart', { productId: product._id, quantity: qty });
       } catch (err) {
@@ -111,7 +115,7 @@ export const CartProvider = ({ children }) => {
       (Array.isArray(prev) ? prev : []).map((item) => (item._id === productId ? { ...item, quantity: qty } : item))
     );
 
-    if (user && user.token) {
+    if (user && user.token && !String(productId).startsWith('local-')) {
       try {
         await API.put('/item', { productId, quantity: qty });
       } catch (err) {
@@ -129,7 +133,7 @@ export const CartProvider = ({ children }) => {
       showToast(`Removed ${targetItem.name} from bag`, 'info');
     }
 
-    if (user && user.token) {
+    if (user && user.token && !String(productId).startsWith('local-')) {
       try {
         await API.delete(`/cart/item/${productId}`);
       } catch (err) {
@@ -187,7 +191,7 @@ export const CartProvider = ({ children }) => {
     0
   );
   const discountAmount = (cartSubtotal * discountPercent) / 100;
-  const shippingFee = cartSubtotal >= 49 || cartItems.length === 0 ? 0 : 4.99;
+  const shippingFee = cartSubtotal >= 15000 || cartItems.length === 0 ? 0 : 750;
   const cartTotal = Math.max(0, cartSubtotal - discountAmount + shippingFee);
 
   return (

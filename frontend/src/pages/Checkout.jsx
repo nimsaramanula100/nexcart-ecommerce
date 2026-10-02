@@ -4,6 +4,7 @@ import { CreditCard, Truck, ShieldCheck, Lock, CheckCircle2, ArrowLeft, Zap, Spa
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import API from '../services/api';
+import { formatLkr } from '../data/localCatalog';
 
 const Checkout = () => {
   const { user } = useAuth();
@@ -306,7 +307,7 @@ const Checkout = () => {
             {processing ? (
               <span>PROCESSING PAYMENT...</span>
             ) : (
-              <span>PAY & PLACE ORDER (${cartTotal.toFixed(2)})</span>
+              <span>PAY & PLACE ORDER ({formatLkr(cartTotal)})</span>
             )}
           </button>
         </form>
@@ -323,7 +324,7 @@ const Checkout = () => {
                 <div className="mini-details">
                   <p className="mini-name">{item.name}</p>
                   <span className="mini-qty">
-                    Qty: {item.quantity} × ${item.price.toFixed(2)}
+                    Qty: {item.quantity} × {formatLkr(item.price)}
                   </span>
                   {(item.selectedColor || item.selectedSize) && (
                     <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>
@@ -331,7 +332,7 @@ const Checkout = () => {
                     </div>
                   )}
                 </div>
-                <span className="mini-price">${(item.price * item.quantity).toFixed(2)}</span>
+                <span className="mini-price">{formatLkr(item.price * item.quantity)}</span>
               </div>
             ))}
           </div>
@@ -340,26 +341,26 @@ const Checkout = () => {
 
           <div className="summary-row">
             <span>Items Subtotal</span>
-            <span>${cartSubtotal.toFixed(2)}</span>
+            <span>{formatLkr(cartSubtotal)}</span>
           </div>
 
           {discountAmount > 0 && (
             <div className="summary-row" style={{ color: 'var(--accent-primary)' }}>
               <span>Promo ({appliedPromo})</span>
-              <span style={{ color: 'var(--accent-primary)' }}>-${discountAmount.toFixed(2)}</span>
+              <span style={{ color: 'var(--accent-primary)' }}>-{formatLkr(discountAmount)}</span>
             </div>
           )}
 
           <div className="summary-row">
             <span>Estimated Shipping</span>
-            <span>{shippingFee === 0 ? 'FREE' : `$${shippingFee.toFixed(2)}`}</span>
+            <span>{shippingFee === 0 ? 'FREE' : formatLkr(shippingFee)}</span>
           </div>
 
           <hr style={{ borderColor: 'var(--border-color)', margin: '0.5rem 0' }} />
 
           <div className="summary-row total-row">
             <span>Grand Total</span>
-            <span className="grand-val">${cartTotal.toFixed(2)}</span>
+            <span className="grand-val">{formatLkr(cartTotal)}</span>
           </div>
         </aside>
       </div>
