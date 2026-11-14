@@ -1,11 +1,12 @@
 /* ==========================================================================
    SHEIN-Inspired Premium E-Commerce Platform — Global Stylesheet
+   වාරික E-Commerce යෙදුමේ ගෝලීය වර්ණ, මූලික සහ පොදු සැකසුම්
    ========================================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  /* SHEIN-inspired High-Fashion Light Mode */
+  /* Light theme tokens / ආලෝක තේමාවේ වර්ණ සහ සැලසුම් අගයන් */
   --bg-primary: #f8f9fa;
   --bg-secondary: #ffffff;
   --bg-card: #ffffff;
@@ -15,7 +16,7 @@
   --text-muted: #868e96;
   --border-color: #e9ecef;
   
-  /* Vibrant SHEIN Pink & Gold Accents */
+  /* Accent and semantic colors / ප්‍රධාන සහ අර්ථවත් වර්ණ */
   --accent-primary: #ff2460;
   --accent-primary-hover: #e01048;
   --accent-gradient: linear-gradient(135deg, #ff2460 0%, #ff527b 50%, #ff758c 100%);
@@ -29,7 +30,7 @@
   --danger: #ff2460;
   --danger-bg: #fff0f3;
   
-  /* Shadows & Glassmorphism */
+  /* Shadows, glass, radius, and transition tokens / සෙවණැලි, වීදුරු පෙනුම, වටකුරු බව සහ මාරු අගයන් */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
@@ -46,6 +47,7 @@
 }
 
 [data-theme='dark'] {
+  /* ThemeContext toggles this root attribute to replace the light tokens / ThemeContext root attribute එකෙන් අඳුරු අගයන් යොදයි */
   --bg-primary: #0d0f12;
   --bg-secondary: #14171d;
   --bg-card: #1c2029;
@@ -67,7 +69,7 @@
   --glass-border: rgba(255, 255, 255, 0.08);
 }
 
-/* Base Styles */
+/* Base typography and browser defaults / මූලික අකුරු සහ browser පෙරනිමි */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -109,7 +111,7 @@ input, select, textarea {
   font-size: inherit;
 }
 
-/* Layout Utilities */
+/* App shell and shared layout / යෙදුම් සැකිල්ල සහ පොදු සැකැස්ම */
 .app-container {
   display: flex;
   flex-direction: column;
@@ -124,7 +126,7 @@ input, select, textarea {
   padding: 2rem 1.5rem;
 }
 
-/* SHEIN Top Promo Announcement Bar */
+/* Top promotional announcement bar / ඉහළ ප්‍රවර්ධන නිවේදන තීරුව */
 .top-promo-bar {
   background: linear-gradient(90deg, #111111 0%, #ff2460 50%, #111111 100%);
   color: #ffffff;
@@ -145,7 +147,7 @@ input, select, textarea {
   gap: 0.4rem;
 }
 
-/* Buttons */
+/* Shared button variants and icon buttons / පොදු button වර්ග සහ අයිකන බොත්තම් */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -232,7 +234,7 @@ input, select, textarea {
   transform: scale(1.08);
 }
 
-/* SHEIN Product Grid & Cards */
+/* Reusable catalog grid and product-card presentation / නැවත භාවිත කළ හැකි catalog grid සහ භාණ්ඩ කාඩ්පත් */
 .grid-products {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -404,7 +406,7 @@ input, select, textarea {
   color: #f59e0b;
 }
 
-/* Flash Sale Countdown Component */
+/* Flash-sale banner and countdown digits / Flash-sale තීරුව සහ countdown අංක */
 .flash-sale-box {
   background: linear-gradient(135deg, #ff2460 0%, #111111 100%);
   border-radius: var(--radius-lg);
@@ -446,7 +448,7 @@ input, select, textarea {
   font-weight: 600;
 }
 
-/* Form Controls */
+/* Shared form control focus and theme styling / පොදු පෝරම පාලක සහ තේමා පෙනුම */
 .form-control {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -463,7 +465,7 @@ input, select, textarea {
   box-shadow: 0 0 0 3px var(--accent-glow);
 }
 
-/* Skeleton Loader */
+/* Loading placeholders and animation / loading placeholder සහ animation */
 .skeleton {
   background: linear-gradient(90deg, var(--bg-hover) 25%, var(--border-color) 50%, var(--bg-hover) 75%);
   background-size: 200% 100%;
@@ -476,7 +478,7 @@ input, select, textarea {
   100% { background-position: -200% 0; }
 }
 
-/* Custom Scrollbar */
+/* Browser scrollbar colors / browser scrollbar වර්ණ */
 ::-webkit-scrollbar {
   width: 7px;
   height: 7px;

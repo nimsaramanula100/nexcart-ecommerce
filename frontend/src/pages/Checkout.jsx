@@ -6,6 +6,8 @@ import { useCart } from '../context/CartContext';
 import API from '../services/api';
 import { formatLkr } from '../data/localCatalog';
 
+// Checkout flow: gathers delivery/payment choice, composes a cart-derived order payload, then routes to confirmation.
+// Checkout ක්‍රියාවලිය: බෙදාහැරීම්/ගෙවීම් තේරීම් ලබාගෙන cart දත්තෙන් order සකසා තහවුරු කිරීමේ පිටුවට යයි.
 const Checkout = () => {
   const { user } = useAuth();
   const {
@@ -20,7 +22,8 @@ const Checkout = () => {
   } = useCart();
   const navigate = useNavigate();
 
-  // Form State
+  // Prefill controlled delivery and demo card fields from the authenticated profile.
+  // පිවිසි පැතිකඩෙන් පාලිත බෙදාහැරීම් සහ demo card ක්ෂේත්‍ර පුරවයි.
   const [shippingAddress, setShippingAddress] = useState({
     fullName: user?.name || '',
     address: user?.address?.street || 'No. 45, Flower Road, Colombo 07',
@@ -53,10 +56,13 @@ const Checkout = () => {
     );
   }
 
+  // Update one shipping-address field based on its input name / input name අනුව ලිපින ක්ෂේත්‍රයක් යාවත්කාලීන කරයි.
   const handleInputChange = (e) => {
     setShippingAddress({ ...shippingAddress, [e.target.name]: e.target.value });
   };
 
+  // Validate required fields, map shared cart values into the API payload, then clear and redirect on success.
+  // අවශ්‍ය ක්ෂේත්‍ර පරීක්ෂා කර පොදු cart අගයන් API payload එකට යොදා සාර්ථක වූ විට හිස් කර යොමු කරයි.
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
     if (!shippingAddress.fullName || !shippingAddress.address || !shippingAddress.city) {
@@ -113,7 +119,7 @@ const Checkout = () => {
       {error && <div className="card badge-danger p-3 mb-3">{error}</div>}
 
       <div className="checkout-layout">
-        {/* Left Column: Shipping & Interactive Card Form */}
+        {/* Delivery form and conditional demo-card preview / බෙදාහැරීම් පෝරමය සහ කොන්දේසිගත demo-card දසුන */}
         <form onSubmit={handlePlaceOrder} className="checkout-main-form">
           {/* Shipping Address */}
           <div className="card form-card">
@@ -312,7 +318,7 @@ const Checkout = () => {
           </button>
         </form>
 
-        {/* Right Summary Panel */}
+        {/* Read-only order summary reflects the same cart totals sent to the API / API වෙත යවන cart එකතුම පෙන්වයි */}
         <aside className="checkout-summary card">
           <h3>ORDER ITEMS ({Array.isArray(cartItems) ? cartItems.length : 0})</h3>
           <hr style={{ borderColor: 'var(--border-color)', margin: '0.5rem 0' }} />

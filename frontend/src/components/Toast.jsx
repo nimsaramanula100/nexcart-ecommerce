@@ -2,9 +2,12 @@ import React from 'react';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
+// Global feedback view: subscribes to CartContext's transient message and selects its icon by type.
+// පොදු දැනුම්දීම: CartContext හි තාවකාලික පණිවිඩය ලබාගෙන වර්ගය අනුව අයිකනය පෙන්වයි.
 const Toast = () => {
   const { toastMessage } = useCart();
 
+  // No active message means no toast is mounted / පණිවිඩයක් නොමැති විට toast එක නොපෙන්වයි.
   if (!toastMessage) return null;
 
   const { text, type } = toastMessage;

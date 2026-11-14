@@ -1,8 +1,10 @@
+// EN: Implement authenticated cart reads and mutations for cartRoutes, keeping totals synchronized; SI: cartRoutes සඳහා authenticated cart කියවීම්/වෙනස්කම් ක්‍රියාත්මක කර එකතුව යාවත්කාලීන කරයි.
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
 const store = require('../config/inMemoryStore');
 
 const getCart = async (req, res) => {
+  // EN: Find or initialize the current user's cart and populate product references in MongoDB mode; SI: වත්මන් user ගේ cart සොයා හෝ සාදා MongoDB mode හි product references පුරවයි.
   try {
     if (global.IS_IN_MEMORY_MODE) {
       const userCart = store.carts[req.user._id] || { user: req.user._id, items: [], totalPrice: 0 };
@@ -21,6 +23,7 @@ const getCart = async (req, res) => {
 };
 
 const addToCart = async (req, res) => {
+  // EN: Resolve the product, increment an existing line or append a new one, then recalculate the cart total; SI: product එක සොයා පවතින line එක වැඩි කර හෝ නව එකක් එක්කර cart එකතුව නැවත ගණනය කරයි.
   try {
     const { productId, quantity = 1 } = req.body;
 
@@ -77,6 +80,7 @@ const addToCart = async (req, res) => {
 };
 
 const updateCartItem = async (req, res) => {
+  // EN: Route nonpositive quantities to removal; otherwise update the matching user's cart line and total; SI: ශූන්‍ය/ඍණ quantity ඉවත් කිරීම වෙත යවා අනෙක්විට user ගේ cart line සහ එකතුව යාවත්කාලීන කරයි.
   try {
     const { productId, quantity } = req.body;
     if (quantity <= 0) return removeFromCart(req, res);
@@ -113,6 +117,7 @@ const updateCartItem = async (req, res) => {
 };
 
 const removeFromCart = async (req, res) => {
+  // EN: Filter out the selected product line and recompute the remaining items' total; SI: තෝරාගත් product line එක filter කර ඉතිරි items වල එකතුව නැවත ගණනය කරයි.
   try {
     const { productId } = req.params;
 
@@ -141,6 +146,7 @@ const removeFromCart = async (req, res) => {
 };
 
 const clearCart = async (req, res) => {
+  // EN: Empty the current user's cart while preserving its user association; SI: user සම්බන්ධතාවය තබාගෙන වත්මන් user ගේ cart එක හිස් කරයි.
   try {
     if (global.IS_IN_MEMORY_MODE) {
       store.carts[req.user._id] = { user: req.user._id, items: [], totalPrice: 0 };

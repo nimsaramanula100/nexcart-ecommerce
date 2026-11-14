@@ -1,3 +1,4 @@
+// EN: Serve catalogue search/filter/sort and admin product changes for productRoutes; MongoDB and fallback paths return matching data; SI: productRoutes සඳහා catalogue සෙවුම්/පෙරහන්/අනුපිළිවෙළ සහ admin වෙනස්කම් හසුරුවා data source දෙකෙන්ම සමාන ප්‍රතිඵල සපයයි.
 const Product = require('../models/Product');
 const store = require('../config/inMemoryStore');
 const autoSeed = require('../utils/autoSeed');
@@ -6,6 +7,7 @@ const autoSeed = require('../utils/autoSeed');
 // @route   GET /api/products
 // @access  Public
 const getProducts = async (req, res) => {
+  // EN: Apply query filters, sort results, and paginate them in either storage mode; SI: storage mode දෙකේදීම query පෙරහන් යොදා ප්‍රතිඵල අනුපිළිවෙළට සකසා පිටුගත කරයි.
   try {
     const { keyword, category, minPrice, maxPrice, sort, page = 1, limit = 12 } = req.query;
 
@@ -103,6 +105,7 @@ const getProducts = async (req, res) => {
 // @route   GET /api/products/featured
 // @access  Public
 const getFeaturedProducts = async (req, res) => {
+  // EN: Return a capped list of products marked as featured; SI: featured ලෙස සලකුණු කළ products සීමිත ලැයිස්තුවක් ලබා දෙයි.
   try {
     if (!global.IS_IN_MEMORY_MODE) {
       await autoSeed();
@@ -122,6 +125,7 @@ const getFeaturedProducts = async (req, res) => {
 // @route   GET /api/products/:id
 // @access  Public
 const getProductById = async (req, res) => {
+  // EN: Look up a single product by route ID and return 404 if absent; SI: route ID අනුව එක් product එකක් සොයා නොමැති විට 404 ලබා දෙයි.
   try {
     if (global.IS_IN_MEMORY_MODE) {
       const product = store.products.find((p) => p._id === req.params.id);
@@ -140,6 +144,7 @@ const getProductById = async (req, res) => {
 // @route   POST /api/products
 // @access  Private/Admin
 const createProduct = async (req, res) => {
+  // EN: Validate required product fields, apply defaults, and persist the new catalogue record; SI: අවශ්‍ය product fields තහවුරු කර defaults යොදා නව catalogue record එක සුරකියි.
   try {
     const { name, price, originalPrice, description, imageUrl, categoryName, countInStock, isFeatured, brand } = req.body;
     if (!name || price === undefined || !description || !imageUrl || !categoryName) {
@@ -182,6 +187,7 @@ const createProduct = async (req, res) => {
 // @route   PUT /api/products/:id
 // @access  Private/Admin
 const updateProduct = async (req, res) => {
+  // EN: Merge submitted fields into the matching product and save the updated record; SI: ඉදිරිපත් කළ fields ගැළපෙන product එකට එක්කර යාවත්කාලීන record එක සුරකියි.
   try {
     if (global.IS_IN_MEMORY_MODE) {
       const index = store.products.findIndex((p) => p._id === req.params.id);
@@ -209,6 +215,7 @@ const updateProduct = async (req, res) => {
 // @route   DELETE /api/products/:id
 // @access  Private/Admin
 const deleteProduct = async (req, res) => {
+  // EN: Remove the product identified by the route parameter; SI: route parameter එකෙන් හඳුනාගත් product එක ඉවත් කරයි.
   try {
     if (global.IS_IN_MEMORY_MODE) {
       store.products = store.products.filter((p) => p._id !== req.params.id);
@@ -230,6 +237,7 @@ const deleteProduct = async (req, res) => {
 // @route   GET /api/products/trending
 // @access  Public
 const getTrendingProducts = async (req, res) => {
+  // EN: Return products flagged as trending or with sales above the configured threshold; SI: trending ලෙස සලකුණු කළ හෝ නියමිත sales සීමාව ඉක්මවූ products ලබා දෙයි.
   try {
     if (!global.IS_IN_MEMORY_MODE) {
       await autoSeed();
@@ -249,6 +257,7 @@ const getTrendingProducts = async (req, res) => {
 // @route   GET /api/products/new-arrivals
 // @access  Public
 const getNewArrivals = async (req, res) => {
+  // EN: Return a capped list marked as new arrivals; SI: new arrivals ලෙස සලකුණු කළ products සීමිත ලැයිස්තුවක් ලබා දෙයි.
   try {
     if (!global.IS_IN_MEMORY_MODE) {
       await autoSeed();

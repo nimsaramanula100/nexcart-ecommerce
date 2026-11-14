@@ -2,10 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ShoppingBag, ShieldCheck, Truck, RefreshCw, Heart, Send } from 'lucide-react';
 
+// Shared footer: combines delivery/trust benefits, a demo newsletter form, and navigation links.
+// පොදු footer එක: බෙදාහැරීම්/විශ්වාස ප්‍රතිලාභ, demo පුවත්පත්‍ර පෝරමය සහ මාර්ග සබැඳි එකතු කරයි.
 const Footer = () => {
   return (
     <footer className="site-footer">
-      {/* Value Proposition Badges */}
+      {/* Delivery and trust highlights / බෙදාහැරීම් සහ විශ්වාසය පිළිබඳ විශේෂාංග */}
       <div className="footer-benefits">
         <div className="benefit-item">
           <Truck size={24} className="benefit-icon" />
@@ -30,7 +32,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Newsletter Signup */}
+      {/* Demo newsletter form keeps submission on this page / demo පුවත්පත්‍ර පෝරමය පිටුවේම රඳවයි */}
       <div className="newsletter-banner">
         <div className="newsletter-container">
           <div>
@@ -46,6 +48,7 @@ const Footer = () => {
         </div>
       </div>
 
+      {/* Brand, product category, customer help and admin navigation / වෙළඳ නාම, කාණ්ඩ, පාරිභෝගික සහ පරිපාලක මාර්ග */}
       <div className="footer-main">
         <div className="footer-col brand-col">
           <div className="footer-logo">

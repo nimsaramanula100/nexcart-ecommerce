@@ -1,3 +1,4 @@
+// EN: Standalone destructive demo seeder: connect to MongoDB/in-memory Mongo, clear collections, and load sample commerce data; SI: demo data seeder එක MongoDB/in-memory Mongo වෙත සම්බන්ධ වී collections හිස් කර නියැදි දත්ත පුරවයි.
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const User = require('./models/User');
@@ -8,6 +9,7 @@ const Cart = require('./models/Cart');
 
 dotenv.config();
 
+// EN: Category records are inserted first so each product can reference its category; SI: සෑම product එකකටම category reference එකක් ලබාදීමට categories පළමුව ඇතුළත් කරයි.
 const categories = [
   { name: "Women's Fashion", slug: 'womens-fashion', description: 'Trendy dresses, tops, skirts, and statement pieces for every occasion.', icon: 'shirt' },
   { name: "Men's Fashion", slug: 'mens-fashion', description: 'Sharp streetwear, premium tees, jackets, and modern essentials.', icon: 'user' },
@@ -19,6 +21,7 @@ const categories = [
   { name: 'Home & Living', slug: 'home-living', description: 'Cozy blankets, decorative pillows, scented candles, and organizers.', icon: 'home' },
 ];
 
+// EN: Representative catalogue fixtures used to populate the development database; SI: development database පිරවීමට භාවිත කරන නියැදි catalogue දත්ත.
 const sampleProducts = [
   // WOMEN'S FASHION
   {
@@ -291,6 +294,7 @@ const sampleProducts = [
 
 const seedDatabase = async () => {
   try {
+    // EN: Prefer configured/local MongoDB; if unavailable, create an ephemeral MongoMemoryServer for this seed run; SI: configured/local MongoDB ප්‍රමුඛ කර නොමැති විට seed ධාවනය සඳහා තාවකාලික MongoMemoryServer එකක් සාදයි.
     const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/aloraluxe';
     try {
       await mongoose.connect(mongoUri, { serverSelectionTimeoutMS: 2000 });
@@ -304,7 +308,7 @@ const seedDatabase = async () => {
       console.log('[Seed] Database connection established via In-Memory MongoDB Server.');
     }
 
-    // Clear existing data
+    // EN: Reset all seeded collections before rebuilding the demo dataset; SI: demo දත්ත නැවත සකස් කිරීමට පෙර seed කරන සියලු collections හිස් කරයි.
     await User.deleteMany();
     await Product.deleteMany();
     await Category.deleteMany();
@@ -313,7 +317,7 @@ const seedDatabase = async () => {
 
     console.log('[Seed] Cleared old collections.');
 
-    // Seed Categories
+    // EN: Insert categories and build a name-to-ID lookup for product references; SI: categories ඇතුළත් කර product references සඳහා name-to-ID lookup එකක් සාදයි.
     const createdCategories = await Category.insertMany(categories);
     console.log(`[Seed] Created ${createdCategories.length} categories.`);
 
@@ -322,7 +326,7 @@ const seedDatabase = async () => {
       categoryMap[cat.name] = cat._id;
     });
 
-    // Seed Users
+    // EN: Create sample accounts; the User model's save hook hashes their passwords; SI: නියැදි accounts සාදන අතර User model save hook එක password hash කරයි.
     const adminUser = await User.create({
       name: 'System Admin',
       email: 'admin@nexcart.com',
@@ -360,6 +364,7 @@ const seedDatabase = async () => {
       category: categoryMap[p.categoryName] || null,
     }));
 
+    // EN: Insert products after resolving each category name to its MongoDB ID; SI: එක් එක් category නාමය MongoDB ID වෙත පරිවර්තනය කිරීමෙන් පසු products ඇතුළත් කරයි.
     const createdProducts = await Product.insertMany(productsWithRefs);
     console.log(`[Seed] Created ${createdProducts.length} sample products.`);
 
@@ -378,4 +383,3 @@ const seedDatabase = async () => {
 };
 
 seedDatabase();
-

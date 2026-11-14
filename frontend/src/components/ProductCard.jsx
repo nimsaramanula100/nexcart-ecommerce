@@ -5,10 +5,13 @@ import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import { formatLkr } from '../data/localCatalog';
 
+// Reusable catalog card: product props feed presentation while cart/wishlist actions update shared contexts.
+// නැවත භාවිත කළ හැකි භාණ්ඩ කාඩ්පත: props දත්ත පෙන්වා cart/wishlist ක්‍රියා පොදු context යාවත්කාලීන කරයි.
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
 
+  // Guard incomplete catalog entries before reading their fields / භාණ්ඩ දත්ත නොමැති විට ක්ෂේත්‍ර කියවීම වළක්වයි.
   if (!product) return null;
 
   const isOutOfStock = product.countInStock <= 0;

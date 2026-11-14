@@ -1,3 +1,4 @@
+// EN: Mongoose user model for account data, password hashing, and password checks; SI: account දත්ත, password hashing සහ password පරීක්ෂාව සඳහා Mongoose user model.
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -42,7 +43,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Hash password before save
+// EN: Hash only when password changes, so unchanged hashes are not hashed again; SI: password වෙනස් වූ විට පමණක් hash කර පෙර hash නැවත hash වීම වළක්වයි.
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
@@ -52,7 +53,7 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-// Match user password
+// EN: Schema method used by login to compare plaintext input with the stored hash; SI: login හි ඇතුළත් password එක ගබඩා කළ hash සමඟ සසඳන schema method.
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };

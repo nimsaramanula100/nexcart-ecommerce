@@ -33,6 +33,8 @@ import AdminProducts from './pages/AdminProducts';
 import AdminOrders from './pages/AdminOrders';
 import AdminUsers from './pages/AdminUsers';
 
+// Root app: nests shared providers around the site shell, then maps URLs to customer/admin pages.
+// මූල යෙදුම: පොදු provider යටතේ අඩවි සැකිල්ල තබා URL පාරිභෝගික/පරිපාලක පිටු සමඟ සම්බන්ධ කරයි.
 function App() {
   return (
     <Router>
@@ -44,7 +46,7 @@ function App() {
                 <Navbar />
                 <main className="main-content">
                   <Routes>
-                    {/* Public Customer Routes */}
+                    {/* Public customer pages need no login / පිවිසීමක් අවශ්‍ය නොවන පාරිභෝගික පිටු */}
                     <Route path="/" element={<Home />} />
                     <Route path="/products" element={<Products />} />
                     <Route path="/products/:id" element={<ProductDetails />} />
@@ -53,7 +55,7 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
 
-                    {/* Customer Authenticated Protected Routes */}
+                    {/* ProtectedRoute reads AuthContext before showing account pages / ගිණුම් පිටු පෙන්වීමට පෙර AuthContext පරීක්ෂා කරයි */}
                     <Route
                       path="/checkout"
                       element={
@@ -87,7 +89,7 @@ function App() {
                       }
                     />
 
-                    {/* Admin RBAC Protected Routes */}
+                    {/* AdminRoute checks the role from AuthContext / AuthContext වෙතින් භූමිකාව පරීක්ෂා කරයි */}
                     <Route
                       path="/admin"
                       element={

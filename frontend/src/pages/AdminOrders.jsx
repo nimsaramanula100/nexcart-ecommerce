@@ -4,12 +4,16 @@ import { ArrowLeft, Clock, Package, CheckCircle2, Truck } from 'lucide-react';
 import API from '../services/api';
 import { useCart } from '../context/CartContext';
 
+// Admin order console: fetches orders, filters them by status, and submits status updates.
+// පරිපාලක order පිටුව: orders ලබාගෙන status අනුව පෙරා යාවත්කාලීන කරයි.
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('All');
   const { showToast } = useCart();
 
+  // Load the management list once; refresh it after a successful status change.
+  // ආරම්භයේ ලැයිස්තුව ලබාගෙන status වෙනස්කමක් සාර්ථක වූ පසු නැවත ලබාගනී.
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -27,6 +31,8 @@ const AdminOrders = () => {
     }
   };
 
+  // Send the selected status to the API and use CartContext's global toast for feedback.
+  // තෝරාගත් status එක API වෙත යවා CartContext හි පොදු toast මගින් ප්‍රතිචාරය පෙන්වයි.
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       await API.put(`/orders/${orderId}/status`, { status: newStatus });

@@ -1,6 +1,7 @@
-// In-Memory Data Store Fallback for instant 0-second boot without local MongoDB
+// EN: Shared mutable fallback dataset used by controllers when MongoDB is unavailable; SI: MongoDB නොමැති විට controllers භාවිත කරන පොදු වෙනස් කළ හැකි fallback දත්ත ගබඩාව.
 const bcrypt = require('bcryptjs');
 
+// EN: Seed category and product fixtures for the storefront's non-MongoDB mode; SI: MongoDB නොවන mode හි storefront සඳහා category සහ product නියැදි දත්ත.
 const initialCategories = [
   { _id: 'cat_1', name: "Women's Fashion", slug: 'womens-fashion', description: 'Trendy dresses, tops, skirts, and statement pieces for every occasion.', icon: 'shirt' },
   { _id: 'cat_2', name: "Men's Fashion", slug: 'mens-fashion', description: 'Sharp streetwear, premium tees, jackets, and modern essentials.', icon: 'user' },
@@ -1141,6 +1142,7 @@ const initialProducts = [
 const hashedAdminPassword = bcrypt.hashSync('admin123', 10);
 const hashedUserPassword = bcrypt.hashSync('user123', 10);
 
+// EN: Preloaded demo accounts and one example order mirror the model-backed response shapes; SI: පෙර පුරවා ඇති demo accounts සහ උදාහරණ order එක model-backed ප්‍රතිචාර හැඩ අනුකරණය කරයි.
 const initialUsers = [
   {
     _id: 'usr_admin',
@@ -1188,6 +1190,7 @@ const initialOrders = [
 
 class InMemoryStore {
   constructor() {
+    // EN: Copy fixture arrays so runtime mutations stay in this store instance; carts begin as a per-user lookup; SI: runtime වෙනස්කම් store instance තුළ තබා ගැනීමට fixture arrays පිටපත් කර carts user අනුව lookup එකක් ලෙස අරඹයි.
     this.categories = [...initialCategories];
     this.products = [...initialProducts];
     this.users = [...initialUsers];

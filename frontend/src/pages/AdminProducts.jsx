@@ -4,6 +4,8 @@ import API from '../services/api';
 import { useCart } from '../context/CartContext';
 import { Link } from 'react-router-dom';
 
+// Product inventory CRUD screen: API data populates the table and controlled modal form.
+// භාණ්ඩ ගබඩා CRUD පිටුව: API දත්ත වගුවට සහ පාලිත modal පෝරමයට යොදයි.
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -26,6 +28,8 @@ const AdminProducts = () => {
     brand: 'NexCart',
   });
 
+  // Load product and category lists independently when this page mounts.
+  // පිටුව ආරම්භයේදී භාණ්ඩ සහ කාණ්ඩ ලැයිස්තු වෙන වෙනම ලබාගනී.
   useEffect(() => {
     fetchProducts();
     fetchCategories();
@@ -54,6 +58,8 @@ const AdminProducts = () => {
     }
   };
 
+  // Reset form state for a new record before opening the shared create/edit dialog.
+  // නව භාණ්ඩයක් එක් කිරීමට පොදු dialog එක විවෘත කිරීමට පෙර පෝරමය හිස් කරයි.
   const handleOpenAddModal = () => {
     setEditingProduct(null);
     setFormData({
@@ -70,6 +76,7 @@ const AdminProducts = () => {
     setIsModalOpen(true);
   };
 
+  // Copy the chosen row into controlled form state for editing / තෝරාගත් පේළියේ අගයන් edit පෝරමයට පිටපත් කරයි.
   const handleOpenEditModal = (prod) => {
     setEditingProduct(prod);
     setFormData({
@@ -86,6 +93,8 @@ const AdminProducts = () => {
     setIsModalOpen(true);
   };
 
+  // Confirm destructive action, call the API, then refresh visible inventory.
+  // මකාදැමීම තහවුරු කර API අමතා දෘශ්‍ය ගබඩා ලැයිස්තුව නැවත පූරණය කරයි.
   const handleDeleteProduct = async (id, name) => {
     if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
       try {
@@ -98,6 +107,8 @@ const AdminProducts = () => {
     }
   };
 
+  // Convert numeric form fields, choose POST vs PUT, and refresh after saving.
+  // සංඛ්‍යාත්මක අගයන් පරිවර්තනය කර POST/PUT තෝරා සුරැකීමෙන් පසු ලැයිස්තුව යාවත්කාලීන කරයි.
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

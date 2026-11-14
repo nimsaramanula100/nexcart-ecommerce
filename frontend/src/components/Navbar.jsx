@@ -22,6 +22,8 @@ import { useCart } from '../context/CartContext';
 import { useTheme } from '../context/ThemeContext';
 import { useWishlist } from '../context/WishlistContext';
 
+// Site navigation: combines route links with auth, cart, wishlist, and theme state from shared contexts.
+// අඩවි සංචාලනය: මාර්ග සබැඳි සමඟ auth, cart, wishlist සහ theme පොදු context වලින් එක් කරයි.
 const Navbar = () => {
   const { user, logout, isAdmin } = useAuth();
   const { cartCount } = useCart();
@@ -43,6 +45,8 @@ const Navbar = () => {
     "Home & Living",
   ];
 
+  // Convert the controlled search field into the catalog page's URL keyword filter.
+  // පාලිත සෙවුම් ක්ෂේත්‍රය catalog පිටුවේ URL keyword filter එකක් බවට පත් කරයි.
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -50,6 +54,7 @@ const Navbar = () => {
     }
   };
 
+  // Clear shared authentication state before navigating away / වෙනත් පිටුවකට යාමට පෙර login තත්ත්වය ඉවත් කරයි.
   const handleLogout = () => {
     logout();
     setUserDropdownOpen(false);
@@ -58,7 +63,7 @@ const Navbar = () => {
 
   return (
     <header className="navbar-header">
-      {/* Announcement Top Bar */}
+      {/* Promotional announcements / ප්‍රවර්ධන නිවේදන */}
       <div className="top-promo-bar">
         <span><Zap size={14} fill="#ffb703" color="#ffb703" /> FLASH SALE: UP TO 70% OFF</span>
         <span className="desktop-only"><Percent size={14} /> FREE SHIPPING ON ORDERS OVER LKR 15,000</span>
@@ -77,7 +82,7 @@ const Navbar = () => {
           </div>
         </Link>
 
-        {/* Global Search Bar */}
+        {/* Desktop search feeds the same keyword handler used by the mobile drawer / desktop සහ mobile සෙවුම් පොදු handler එක භාවිත කරයි */}
         <form onSubmit={handleSearch} className="nav-search-form desktop-only">
           <input
             type="text"
@@ -91,7 +96,7 @@ const Navbar = () => {
           </button>
         </form>
 
-        {/* Right Action Icons */}
+        {/* Context-backed actions and user menu / context මගින් පාලනය වන ක්‍රියා සහ පරිශීලක මෙනුව */}
         <div className="navbar-actions">
           {/* Theme Toggle */}
           <button className="icon-btn" onClick={toggleTheme} title="Toggle Theme">
@@ -169,7 +174,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Category Bar for Desktop */}
+      {/* Category links become catalog query parameters / කාණ්ඩ සබැඳි catalog query parameter බවට පත් වේ */}
       <div className="category-mega-bar desktop-only">
         <div className="category-mega-container">
           <Link to="/products" className="cat-item hot-cat">
@@ -183,7 +188,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation Drawer */}
+      {/* Responsive drawer reuses the search and route destinations / ප්‍රතිචාරාත්මක drawer එක සෙවුම හා මාර්ග නැවත භාවිත කරයි */}
       {mobileMenuOpen && (
         <div className="mobile-nav-drawer fade-in">
           <form onSubmit={handleSearch} className="nav-search-form" style={{ maxWidth: '100%' }}>
@@ -242,7 +247,7 @@ const Navbar = () => {
         </div>
       )}
 
-      {/* Embedded Component CSS */}
+      {/* Layout and responsive rules for this navigation component / මෙම navigation component හි සැකැස්ම හා ප්‍රතිචාරාත්මක නීති */}
       <style>{`
         .navbar-header {
           position: sticky;

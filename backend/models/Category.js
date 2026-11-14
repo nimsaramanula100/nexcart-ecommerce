@@ -1,3 +1,4 @@
+// EN: Category model defines unique names/slugs and display metadata for product grouping; SI: products කාණ්ඩගත කිරීමට unique නාම/slugs සහ පෙන්වීමේ metadata Category model තුළ නිර්වචනය කරයි.
 const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema(

@@ -1,9 +1,11 @@
+// EN: Process customer and admin order workflows for orderRoutes, using models or the shared fallback store; SI: orderRoutes සඳහා customer/admin order කාර්යයන් models හෝ shared fallback store භාවිතයෙන් හසුරුවයි.
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Cart = require('../models/Cart');
 const store = require('../config/inMemoryStore');
 
 const addOrderItems = async (req, res) => {
+  // EN: Validate the submitted order, reduce stock, create a paid order, and clear the user's cart; SI: order දත්ත තහවුරු කර තොගය අඩු කර paid order සාදා user ගේ cart එක හිස් කරයි.
   try {
     const { orderItems, shippingAddress, paymentMethod, itemsPrice, taxPrice, shippingPrice, totalPrice, paymentResult } = req.body;
     if (!orderItems || orderItems.length === 0) {
@@ -11,7 +13,7 @@ const addOrderItems = async (req, res) => {
     }
 
     if (global.IS_IN_MEMORY_MODE) {
-      // Reduce stock in memory
+      // EN: Reduce stock for each matching product; optional chaining safely checks object-or-ID item references; SI: ගැළපෙන සෑම product එකකම තොගය අඩු කර optional chaining මඟින් object/ID reference පරීක්ෂා කරයි.
       for (const item of orderItems) {
         const prod = store.products.find((p) => p._id === item.product || p._id === item.product?._id);
         if (prod) {
@@ -68,6 +70,7 @@ const addOrderItems = async (req, res) => {
 };
 
 const getOrderById = async (req, res) => {
+  // EN: Fetch one order and allow access only to its owner or an admin; SI: එක් order එකක් ලබාගෙන එහි හිමිකරුට හෝ admin ට පමණක් ප්‍රවේශය දෙයි.
   try {
     if (global.IS_IN_MEMORY_MODE) {
       const order = store.orders.find((o) => o._id === req.params.id);
@@ -91,6 +94,7 @@ const getOrderById = async (req, res) => {
 };
 
 const getMyOrders = async (req, res) => {
+  // EN: Return only orders associated with the authenticated user; SI: authenticated user සමඟ සම්බන්ධ orders පමණක් ලබා දෙයි.
   try {
     if (global.IS_IN_MEMORY_MODE) {
       const userOrders = store.orders.filter(
@@ -106,6 +110,7 @@ const getMyOrders = async (req, res) => {
 };
 
 const getOrders = async (req, res) => {
+  // EN: List all orders for the admin-only route, populating user details in MongoDB mode; SI: admin-only route සඳහා සියලු orders ලැයිස්තුගත කර MongoDB mode හි user විස්තර පුරවයි.
   try {
     if (global.IS_IN_MEMORY_MODE) {
       return res.json(store.orders);
@@ -118,6 +123,7 @@ const getOrders = async (req, res) => {
 };
 
 const updateOrderStatus = async (req, res) => {
+  // EN: Change the order status and record delivery fields when the new status is Delivered; SI: order status වෙනස් කර Delivered වූ විට delivery විස්තර සටහන් කරයි.
   try {
     const { status } = req.body;
     if (global.IS_IN_MEMORY_MODE) {

@@ -3,10 +3,14 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Users, ShieldCheck, Mail, Phone, MapPin } from 'lucide-react';
 import API from '../services/api';
 
+// Admin directory: retrieves account records and renders their role and contact summary.
+// පරිපාලක පරිශීලක නාමාවලිය: ගිණුම් ලබාගෙන භූමිකාව සහ සම්බන්ධතා සාරාංශ පෙන්වයි.
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Request the directory once and normalize an unsuccessful response to an empty list.
+  // එක්වර නාමාවලිය ලබාගෙන අසාර්ථක ප්‍රතිචාර හිස් ලැයිස්තුවක් බවට පත් කරයි.
   useEffect(() => {
     const fetchUsers = async () => {
       try {

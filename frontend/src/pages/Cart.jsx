@@ -4,6 +4,8 @@ import { ShoppingBag, Trash2, ArrowRight, ArrowLeft, Plus, Minus, Tag, Check, Tr
 import { useCart } from '../context/CartContext';
 import { formatLkr } from '../data/localCatalog';
 
+// Cart page: displays CartContext items, variant/quantity controls, promo actions, and derived totals.
+// Cart පිටුව: CartContext භාණ්ඩ, variant/ප්‍රමාණ පාලක, promo ක්‍රියා සහ ගණනය කළ එකතු පෙන්වයි.
 const Cart = () => {
   const {
     cartItems,
@@ -22,6 +24,8 @@ const Cart = () => {
   const [inputCode, setInputCode] = useState('');
   const navigate = useNavigate();
 
+  // Submit the entered code to shared cart logic; the context reports success or failure.
+  // ඇතුළත් කළ code එක පොදු cart logic වෙත යවා ප්‍රතිඵලය context එකෙන් දැනුම් දෙයි.
   const handleApplyPromo = (e) => {
     e.preventDefault();
     if (inputCode.trim()) {
@@ -30,6 +34,8 @@ const Cart = () => {
     }
   };
 
+  // Progress values are derived from the same subtotal used in the order summary.
+  // ප්‍රගති අගයන් order summary හි subtotal එකෙන්ම ගණනය කරයි.
   const freeShippingThreshold = 15000;
   const progressPercent = Math.min(100, (cartSubtotal / freeShippingThreshold) * 100);
   const remainingForFreeShipping = Math.max(0, freeShippingThreshold - cartSubtotal);
@@ -82,7 +88,7 @@ const Cart = () => {
         <h1>MY SHOPPING BAG ({(Array.isArray(cartItems) ? cartItems : []).reduce((acc, item) => acc + item.quantity, 0)} ITEMS)</h1>
       </div>
 
-      {/* Free Shipping Progress Bar */}
+      {/* Shipping threshold feedback derived from the shared subtotal / පොදු subtotal අනුව නොමිලේ shipping සීමාව පෙන්වයි */}
       <div className="free-shipping-bar card">
         <div className="shipping-bar-text">
           <Truck size={20} color="#ff2460" />
@@ -98,7 +104,7 @@ const Cart = () => {
       </div>
 
       <div className="cart-layout">
-        {/* Cart Items Table */}
+        {/* Item rows call CartContext mutations so header counts and totals stay in sync / context වෙනස්කම් header සහ එකතු යාවත්කාලීන කරයි */}
         <div className="cart-items-list card">
           <div className="list-header">
             <span>Item Details</span>
@@ -173,7 +179,7 @@ const Cart = () => {
           </div>
         </div>
 
-        {/* Summary Sidebar */}
+        {/* Promo and totals are shared cart values / promo සහ එකතු පොදු cart අගයන් වේ */}
         <div className="cart-summary card">
           <h3>ORDER SUMMARY</h3>
           <hr style={{ borderColor: 'var(--border-color)', margin: '0.5rem 0' }} />

@@ -6,6 +6,8 @@ import { useWishlist } from '../context/WishlistContext';
 import ProductCard from '../components/ProductCard';
 import { formatLkr, getProductById, getProducts } from '../data/localCatalog';
 
+// Product detail route: resolves the URL ID from localCatalog and connects variant choices to cart/wishlist contexts.
+// භාණ්ඩ විස්තර route එක: URL ID localCatalog වෙතින් සොයා variant තේරීම් cart/wishlist context සමඟ සම්බන්ධ කරයි.
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -22,6 +24,8 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Load the selected item, defaults, and same-category suggestions whenever the route ID changes.
+  // route ID වෙනස් වන විට භාණ්ඩය, පෙරනිමි තේරීම් සහ එකම කාණ්ඩයේ යෝජනා ලබාගනී.
   useEffect(() => {
     const localProduct = getProductById(id);
     setProduct(localProduct || null);
@@ -35,12 +39,16 @@ const ProductDetails = () => {
     setLoading(false);
   }, [id]);
 
+  // Variant selections are copied into the product passed to CartContext.
+  // තෝරාගත් variant අගයන් CartContext වෙත යවන භාණ්ඩයට ඇතුළත් කරයි.
   const handleAddToCart = () => {
     if (product) {
       addToCart({ ...product, selectedColor, selectedSize }, quantity);
     }
   };
 
+  // Buy Now uses the same cart update, then takes the customer to review the bag.
+  // Buy Now එකම cart update එකෙන් පසු bag එක බැලීමට යොමු කරයි.
   const handleBuyNow = () => {
     if (product) {
       addToCart({ ...product, selectedColor, selectedSize }, quantity);
@@ -79,6 +87,7 @@ const ProductDetails = () => {
         <ArrowLeft size={16} /> Back to Catalog
       </Link>
 
+      {/* Gallery and purchase controls are driven by the selected product and local component state / රූප ගැලරිය හා මිලදී ගැනීමේ පාලක තෝරාගත් භාණ්ඩය සහ component state භාවිත කරයි */}
       <div className="details-container card">
         {/* Left Column: Multi-Image Thumbnail Gallery */}
         <div className="gallery-section">

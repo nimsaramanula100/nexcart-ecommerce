@@ -1,8 +1,10 @@
+// EN: Handle category listing and admin-managed category creation/deletion for categoryRoutes; SI: categoryRoutes සඳහා category ලැයිස්තුගත කිරීම හා admin මඟින් නිර්මාණය/මැකීම හසුරුවයි.
 const Category = require('../models/Category');
 const store = require('../config/inMemoryStore');
 const autoSeed = require('../utils/autoSeed');
 
 const getCategories = async (req, res) => {
+  // EN: Seed MongoDB if needed, then return categories from MongoDB or the in-memory dataset; SI: අවශ්‍ය නම් MongoDB seed කර MongoDB හෝ memory dataset වෙතින් categories ලබා දෙයි.
   try {
     if (!global.IS_IN_MEMORY_MODE) {
       await autoSeed();
@@ -18,6 +20,7 @@ const getCategories = async (req, res) => {
 };
 
 const createCategory = async (req, res) => {
+  // EN: Validate the name, prevent duplicates, derive a slug, and save through the selected store; SI: නාමය තහවුරු කර duplicates වළක්වා slug සාදා තෝරාගත් store එකේ සුරකියි.
   try {
     const { name, description, icon } = req.body;
     if (!name) return res.status(400).json({ message: 'Category name is required' });
@@ -49,6 +52,7 @@ const createCategory = async (req, res) => {
 };
 
 const deleteCategory = async (req, res) => {
+  // EN: Remove the requested category and return not-found for missing MongoDB records; SI: ඉල්ලූ category එක ඉවත් කර MongoDB record නොමැති නම් not-found ලබා දෙයි.
   try {
     if (global.IS_IN_MEMORY_MODE) {
       store.categories = store.categories.filter((c) => c._id !== req.params.id);

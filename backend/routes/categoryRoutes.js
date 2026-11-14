@@ -1,3 +1,4 @@
+// EN: Expose category reads publicly and require an admin for create/delete operations; SI: category කියවීම් public වන අතර create/delete සඳහා admin අවශ්‍යය.
 const express = require('express');
 const router = express.Router();
 const {

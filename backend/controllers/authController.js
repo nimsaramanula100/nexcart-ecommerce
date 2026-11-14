@@ -1,8 +1,10 @@
+// EN: Handle account registration, login, and profile operations for authRoutes; use Mongoose or the shared store according to runtime mode; SI: authRoutes සඳහා registration, login හා profile ක්‍රියා හසුරුවමින් runtime mode අනුව Mongoose හෝ shared store භාවිත කරයි.
 const User = require('../models/User');
 const store = require('../config/inMemoryStore');
 const generateToken = require('../utils/generateToken');
 const bcrypt = require('bcryptjs');
 
+// EN: Validate registration input, reject duplicate email, persist a hashed-password user, and return a JWT; SI: registration දත්ත තහවුරු කර duplicate email වළක්වා hash කළ password සහිත user සාදා JWT ලබා දෙයි.
 const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -56,6 +58,7 @@ const registerUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
+  // EN: Find the account and compare its password hash before returning profile fields and a token; SI: token හා profile දත්ත ලබාදීමට පෙර account එක සොයා password hash පරීක්ෂා කරයි.
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -98,6 +101,7 @@ const loginUser = async (req, res) => {
 };
 
 const getUserProfile = async (req, res) => {
+  // EN: Return the authenticated user's profile without exposing the password in either storage mode; SI: storage mode දෙකේදීම password නොපෙන්වා authenticated user profile එක ලබා දෙයි.
   try {
     if (global.IS_IN_MEMORY_MODE) {
       const user = store.users.find((u) => u._id === req.user._id);
@@ -117,6 +121,7 @@ const getUserProfile = async (req, res) => {
 };
 
 const updateUserProfile = async (req, res) => {
+  // EN: Apply supplied profile fields, hash changed passwords through bcrypt/schema hooks, then return a refreshed token; SI: ඉදිරිපත් කළ profile fields යාවත්කාලීන කර password hash කර අලුත් token එකක් ලබා දෙයි.
   try {
     if (global.IS_IN_MEMORY_MODE) {
       const user = store.users.find((u) => u._id === req.user._id);

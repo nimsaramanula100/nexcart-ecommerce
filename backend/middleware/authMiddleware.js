@@ -1,8 +1,10 @@
+// EN: Authentication and role checks used between route matching and controllers; SI: route තේරීම සහ controller අතර භාවිත වන authentication හා role පරීක්ෂා.
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const store = require('../config/inMemoryStore');
 
 const protect = async (req, res, next) => {
+  // EN: Verify a Bearer token, load its user from the active data source, then continue; SI: Bearer token සත්‍යාපනය කර සක්‍රිය data source එකෙන් user ලබාගෙන ඉදිරියට යයි.
   let token;
 
   if (
@@ -17,6 +19,7 @@ const protect = async (req, res, next) => {
       );
 
       if (global.IS_IN_MEMORY_MODE) {
+        // EN: Attach a password-free store user before passing control to the next handler; SI: ඊළඟ handler වෙත යැවීමට පෙර password නොමැති store user එක request එකට එක් කරයි.
         const found = store.users.find((u) => u._id === decoded.id);
         if (found) {
           const { password, ...safeUser } = found;
@@ -43,6 +46,7 @@ const protect = async (req, res, next) => {
 };
 
 const admin = (req, res, next) => {
+  // EN: Allow only authenticated users with the admin role to reach the controller; SI: admin role සහිත authenticated users පමණක් controller වෙත යවයි.
   if (req.user && req.user.role === 'admin') {
     next();
   } else {

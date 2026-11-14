@@ -3,10 +3,14 @@ import { Link } from 'react-router-dom';
 import { DollarSign, ShoppingBag, Users, Package, AlertTriangle, ArrowRight, ShieldCheck } from 'lucide-react';
 import API from '../services/api';
 
+// Admin overview: loads aggregate store metrics and links to the detailed management pages.
+// පරිපාලක සාරාංශය: සමස්ත වෙළඳසැල් දත්ත ලබාගෙන කළමනාකරණ පිටු වෙත සබැඳි සපයයි.
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Fetch once on mount; failures fall back to empty metrics so the dashboard can still render.
+  // mount වූ විට දත්ත ලබාගනී; අසමත් වුවහොත් පිටුව පෙන්වීමට හිස් අගයන් යොදයි.
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -52,7 +56,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Metrics Cards Grid */}
+      {/* Summary cards consume the dashboard stats response / සාරාංශ කාඩ්පත් dashboard API ප්‍රතිචාරය භාවිත කරයි */}
       <div className="metrics-grid">
         <div className="metric-card card">
           <div className="metric-icon green">
@@ -96,7 +100,7 @@ const AdminDashboard = () => {
       </div>
 
       <div className="admin-tables-grid">
-        {/* Recent Orders Table */}
+        {/* Recent order rows and low-stock alerts are separate slices of the same response / එකම ප්‍රතිචාරයේ order සහ stock කොටස් */}
         <div className="card">
           <div className="card-header flex-between">
             <h3>Recent Orders</h3>

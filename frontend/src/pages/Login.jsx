@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Lock, Mail, ArrowRight, ShieldCheck, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
+// Login page: controlled credentials call AuthContext, which persists the session for the rest of the app.
+// පිවිසුම් පිටුව: පාලිත credentials AuthContext වෙත යවා යෙදුම පුරා session එක සුරකියි.
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,6 +12,8 @@ const Login = () => {
   const { login, loading } = useAuth();
   const navigate = useNavigate();
 
+  // Route admins and customers to their landing areas after the shared login request succeeds.
+  // login ඉල්ලීම සාර්ථක වූ පසු admin සහ customer පරිශීලකයන් අදාළ මුල් පිටුවට යොමු කරයි.
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -25,6 +29,8 @@ const Login = () => {
     }
   };
 
+  // Demo buttons only prefill the form; submission still uses the normal login flow.
+  // demo බොත්තම් පෝරමය පුරවයි; ඇතුළත් කිරීම සාමාන්‍ය login ක්‍රියාවම භාවිත කරයි.
   const fillCustomerDemo = () => {
     setEmail('john@example.com');
     setPassword('user123');

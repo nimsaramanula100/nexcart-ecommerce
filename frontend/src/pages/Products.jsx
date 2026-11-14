@@ -4,6 +4,8 @@ import { Search, SlidersHorizontal, X, ArrowUpDown, RefreshCw, Grid, LayoutGrid 
 import ProductCard from '../components/ProductCard';
 import { categories as localCategories, getProducts } from '../data/localCatalog';
 
+// Catalog page: URL search parameters initialize filters; localCatalog supplies the filtered/sorted products.
+// Catalog පිටුව: URL search parameter filter ආරම්භ කර localCatalog පෙරූ/පිළිවෙළ කළ භාණ්ඩ සපයයි.
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
@@ -19,6 +21,8 @@ const Products = () => {
   const [totalProducts, setTotalProducts] = useState(0);
   const [gridCols, setGridCols] = useState(4); // 4 or 3 grid view toggle
 
+  // Keep the controlled filter inputs aligned with navigation links and browser history.
+  // navigation සබැඳි සහ browser history සමඟ පාලිත filter අගයන් ගැළපේ.
   useEffect(() => {
     setCategories(localCategories);
   }, []);
@@ -32,6 +36,7 @@ const Products = () => {
     fetchProducts();
   }, [selectedCategory, keyword, sort, searchParams]);
 
+  // Normalize labels for category-pill comparisons / කාණ්ඩ pill සැසඳීමට නාම සාමාන්‍යකරණය කරයි.
   const isCategorySelected = (catName) => {
     const current = (selectedCategory || '').trim().toLowerCase();
     const target = (catName || '').trim().toLowerCase();
@@ -42,6 +47,8 @@ const Products = () => {
     setCategories(localCategories);
   };
 
+  // Apply current state filters through the local catalog helper, then publish results/count.
+  // දේශීය catalog helper මගින් filters යොදා ප්‍රතිඵල සහ ගණන state වෙත යොදයි.
   const fetchProducts = async () => {
     setLoading(true);
     const fetchedProducts = getProducts({
@@ -56,6 +63,8 @@ const Products = () => {
     setLoading(false);
   };
 
+  // Commit the typed keyword to the URL so search remains shareable and navigable.
+  // සෙවුම් පදය URL වෙත යොදා එය share/navigation කළ හැකි කරයි.
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const newParams = new URLSearchParams(searchParams);
@@ -67,6 +76,8 @@ const Products = () => {
     setSearchParams(newParams);
   };
 
+  // Category changes clear conflicting filters and replace the URL query parameters.
+  // කාණ්ඩය මාරු කළ විට ගැටෙන filters ඉවත් කර URL query නැවත සකසයි.
   const handleCategorySelect = (catName) => {
     const cleanCat = (catName || '').trim();
     setSelectedCategory(cleanCat);
@@ -83,6 +94,7 @@ const Products = () => {
     setSearchParams(newParams);
   };
 
+  // Restore defaults in both component state and the browser URL / component state සහ URL දෙකම පෙරනිමියට ගෙනයයි.
   const resetFilters = () => {
     setKeyword('');
     setSelectedCategory('All');

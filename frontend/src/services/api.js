@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+// API service: resolve the Vite-configured backend base URL and share one Axios client.
+// API සේවාව: Vite backend URL තෝරා පොදු Axios client එකක් නිර්මාණය කරයි.
 let rawBaseUrl =
   import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_API_BASE_URL ||
@@ -21,7 +23,8 @@ const API = axios.create({
   baseURL: rawBaseUrl,
 });
 
-// Request Interceptor: Attach Auth JWT Token
+// Request interceptor reads the cached AuthContext session and attaches its bearer token.
+// Request interceptor සුරැකි AuthContext සැසිය කියවා bearer token එක එක් කරයි.
 API.interceptors.request.use(
   (config) => {
     const userInfo = localStorage.getItem('nexcart_user')

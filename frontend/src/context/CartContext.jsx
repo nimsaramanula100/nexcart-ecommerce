@@ -2,8 +2,12 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import API from '../services/api';
 import { useAuth } from './AuthContext';
 
+// Shared cart state: local storage supports guests, while signed-in changes are synchronized with the API.
+// පොදු cart තත්ත්වය: අමුත්තන්ට local storage භාවිත කර login පසු වෙනස්කම් API සමඟ සමමුහුර්ත කරයි.
 const CartContext = createContext();
 
+// Provider derives totals from items and publishes cart, promo, and toast actions to the app.
+// Provider එක භාණ්ඩවලින් එකතුව ගණනය කර cart, promo සහ toast ක්‍රියා යෙදුමට ලබා දෙයි.
 export const CartProvider = ({ children }) => {
   const { user } = useAuth();
   const [cartItems, setCartItems] = useState(() => {
@@ -21,6 +25,8 @@ export const CartProvider = ({ children }) => {
   const [appliedPromo, setAppliedPromo] = useState('');
   const [toastMessage, setToastMessage] = useState(null);
 
+  // A signed-in session loads its server cart; a separate effect persists the merged state locally.
+  // login සැසිය server cart ලබාගනී; වෙනම effect එක ඒකාබද්ධ තත්ත්වය locally සුරකියි.
   useEffect(() => {
     if (user && user.token) {
       fetchServerCart();
@@ -31,6 +37,8 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('nexcart_cart', JSON.stringify(Array.isArray(cartItems) ? cartItems : []));
   }, [cartItems]);
 
+  // Toast messages are short-lived UI feedback shared with the global Toast component.
+  // Toast පණිවිඩ ගෝලීය Toast component එක සමඟ බෙදාගෙන කෙටි කාලයකින් ඉවත් වේ.
   const showToast = (text, type = 'success') => {
     setToastMessage({ text, type, id: Date.now() });
     setTimeout(() => {
@@ -38,6 +46,8 @@ export const CartProvider = ({ children }) => {
     }, 3000);
   };
 
+  // Normalize API cart items and retain local-only catalog items during synchronization.
+  // API cart items සාමාන්‍යකරණය කර සමමුහුර්තයේදී local-only භාණ්ඩ රඳවා ගනී.
   const fetchServerCart = async () => {
     try {
       const { data } = await API.get('/cart');
@@ -62,6 +72,8 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // Merge matching variants locally first, then sync non-local products for signed-in users.
+  // එකම variant දේශීය cart එකට එකතු කර login පරිශීලකයන්ගේ server cart සමඟ සමමුහුර්ත කරයි.
   const addToCart = async (product, quantity = 1) => {
     const qty = Number(quantity);
     setCartItems((prevItems) => {
@@ -105,6 +117,8 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // Keep the item count positive; zero or less delegates to the removal flow.
+  // ප්‍රමාණය ධනව තබා ශූන්‍ය/අඩු අගය ඉවත් කිරීමේ ක්‍රියාවට යොමු කරයි.
   const updateQuantity = async (productId, quantity) => {
     const qty = Number(quantity);
     if (qty <= 0) {
@@ -124,6 +138,8 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // Remove from client state immediately and best-effort delete the server copy.
+  // client තත්ත්වයෙන් වහා ඉවත් කර server පිටපත හැකි නම් මකා දමයි.
   const removeFromCart = async (productId) => {
     const safeCart = Array.isArray(cartItems) ? cartItems : [];
     const targetItem = safeCart.find((i) => i._id === productId);
@@ -142,6 +158,8 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // Clear items and discounts together, then request server cleanup for authenticated users.
+  // භාණ්ඩ සහ වට්ටම් එකට හිස් කර පිවිසි අය සඳහා server එකත් පිරිසිදු කරයි.
   const clearCart = async () => {
     setCartItems([]);
     setAppliedPromo('');
@@ -155,6 +173,8 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // Promo codes set the shared discount percentage used by both cart and checkout totals.
+  // promo code එක cart සහ checkout එකතු සඳහා පොදු වට්ටම් ප්‍රතිශතය සකසයි.
   const applyPromoCode = (code) => {
     const cleanCode = code.trim().toUpperCase();
     if (cleanCode === 'SHEINVIP') {

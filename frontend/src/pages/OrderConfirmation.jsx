@@ -4,11 +4,14 @@ import { CheckCircle2, Package, Truck, ArrowRight, Clock, MapPin } from 'lucide-
 import API from '../services/api';
 import { formatLkr } from '../data/localCatalog';
 
+// Confirmation page: reads the route's order ID, loads its API record, and presents status and receipt details.
+// තහවුරු කිරීමේ පිටුව: route order ID එකෙන් API දත්ත ලබාගෙන status සහ රිසිට් විස්තර පෙන්වයි.
 const OrderConfirmation = () => {
   const { id } = useParams();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Re-fetch whenever the URL order ID changes / URL හි order ID වෙනස් වූ විට නැවත ලබාගනී.
   useEffect(() => {
     const fetchOrder = async () => {
       try {
@@ -60,6 +63,7 @@ const OrderConfirmation = () => {
         </div>
       </div>
 
+      {/* Progress state, destination/payment details, and line items come from the fetched order / ලබාගත් order දත්තවලින් status, ලිපිනය හා භාණ්ඩ පෙන්වයි */}
       <div className="confirmation-grid">
         {/* Status Tracker */}
         <div className="card tracker-card">

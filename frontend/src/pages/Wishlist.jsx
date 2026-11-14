@@ -4,9 +4,12 @@ import { Heart, ArrowRight, Trash2 } from 'lucide-react';
 import { useWishlist } from '../context/WishlistContext';
 import ProductCard from '../components/ProductCard';
 
+// Saved-items page: reads WishlistContext and reuses ProductCard for the same catalog interactions.
+// සුරැකි භාණ්ඩ පිටුව: WishlistContext කියවා catalog ක්‍රියා සඳහා ProductCard නැවත භාවිත කරයි.
 const Wishlist = () => {
   const { wishlist, wishlistCount } = useWishlist();
 
+  // Empty and populated states both reflect the persistent shared wishlist / හිස් හෝ පිරුණු දසුන පොදු wishlist තත්ත්වය පෙන්වයි.
   if (!Array.isArray(wishlist) || wishlistCount === 0) {
     return (
       <div className="empty-wishlist card text-center fade-in">

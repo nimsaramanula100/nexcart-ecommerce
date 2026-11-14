@@ -1,3 +1,5 @@
+// Local catalog: turns imported image assets into demo products and provides filtering/formatting helpers.
+// දේශීය catalog එක: image assets demo භාණ්ඩ බවට පත් කර filter/format helper සපයයි.
 const imageFiles = import.meta.glob([
   '../../../img/*.{jpg,jpeg,png,webp}',
   '!../../../img/*%*',
@@ -19,6 +21,8 @@ const categoryRules = [
   { name: "Women's Fashion", pattern: /women|woman|girl|lady|outfit|dress|skirt|blouse|jeans|fashion|shirt|trouser|pants|jacket|coat|tee|top|hoodie|sweater|cardigan|clothing|wear/i, range: [4500, 24000] },
 ];
 
+// Product descriptions, category overrides, and price ranges enrich image-derived catalog entries.
+// රූපවලින් සෑදෙන catalog භාණ්ඩ විස්තර, කාණ්ඩ විශේෂ නියම සහ මිල පරාස මගින් පුරවයි.
 const categoryDetails = {
   "Women's Fashion": 'A versatile wardrobe piece selected for easy styling, comfortable everyday wear, and a polished finish. Check the product photos for its fit, color, and styling details.',
   "Men's Fashion": 'A modern everyday essential with an easy-to-style look and comfortable feel. Product photos show the design and styling; check the available options before ordering.',
@@ -50,19 +54,48 @@ const categoryOverrides = {
   '319755642316663217.jpg': 'Shoes & Sneakers',
   '47358233577892518.jpg': "Women's Fashion",
   '582582901848302181.jpg': "Women's Fashion",
-  '66146688275143963.jpg': "Men's Fashion",
+  '66146688275143963.jpg': "Women's Fashion",
   '68820700553441277.jpg': 'Shoes & Sneakers',
   '74027987621941193.jpg': 'Beauty & Skincare',
   'blue linen shirt with white pants.jpg': "Men's Fashion",
   'Woods & Streets Combo.jpg': "Men's Fashion",
 };
 
+// Named overrides keep image IDs out of the storefront and provide titles that match each product photo.
+// රූප ගොනු ID වෙනුවට, භාණ්ඩ ඡායාරූපයට ගැළපෙන නමක් storefront එකේ පෙන්වීමට මෙම map එක භාවිත කරයි.
+const productNameOverrides = {
+  '101119954129769238.jpg': 'Silver Frame Classic Sunglasses',
+  '10836855347764467.jpg': 'Gold Teardrop Crystal Pendant Necklace',
+  '1104437508654011525.jpg': 'Monochrome Graphic Shirt and Jogger Set',
+  '1196337402525526.jpg': 'Classic Black and White High-Top Sneakers',
+  '122934264825149737.jpg': 'Crystal Bow Necklace and Earrings Set',
+  '1337074886926133.jpg': 'Minimal Black Mesh Strap Watch',
+  '137008013661211502.jpg': 'Botanical Glow Skincare Set',
+  '13721973862309088.jpg': 'Beige Tee and Cargo Pants Outfit',
+  '1407443631263027.jpg': 'Striped Tee and Wide-Leg Jeans Outfit',
+  '140806235190584.jpg': 'Botanical Hydration Skincare Set',
+  '14496030045407245.jpg': 'Layered Gold Charm Necklace Set',
+  '14918242512408976.jpg': 'Interlocking Circle Pendant Necklace',
+  '211174978209721.jpg': '1977 Classic Fleece Hoodie',
+  '2603712275701131.jpg': 'Monogram Multi-Pocket Crossbody Bag',
+  '281543715903128.jpg': 'Classic Black Canvas Sneakers',
+  '319755642316663217.jpg': 'White and Black Chunky Running Sneakers',
+  '47358233577892518.jpg': 'Black Plaid Hooded Shirt Jacket',
+  '582582901848302181.jpg': 'Olive Cropped Jacket and Wide-Leg Trousers',
+  '66146688275143963.jpg': 'Leather Jacket and Olive Skirt Outfit',
+  '68820700553441277.jpg': 'White and Black Sport Sneakers',
+  '74027987621941193.jpg': 'Velvet Red Matte Lipstick',
+};
+
 const priceSteps = [0, 700, 1400, 2100, 2800, 3500, 4200];
 
+// Build stable local product records from the matched filenames, then append the hand-curated suitcase.
+// ගැළපෙන ගොනු නාමවලින් ස්ථාවර දේශීය භාණ්ඩ සකසා පසුව විශේෂ suitcase භාණ්ඩය එක් කරයි.
 const products = [
   ...Object.entries(imageFiles).map(([filePath, imageUrl], index) => {
     const fileName = filePath.split('/').pop().replace(/\.[^.]+$/, '');
-    const normalizedName = fileName.replace(/[_]+/g, ' ').replace(/\s+/g, ' ').trim();
+    const normalizedName = productNameOverrides[`${fileName}.jpg`]
+      || fileName.replace(/[_]+/g, ' ').replace(/\s+/g, ' ').trim();
     const categoryName = categoryOverrides[fileName]
       || categoryRules.find((category) => category.pattern.test(normalizedName))?.name
       || "Women's Fashion";
@@ -127,6 +160,8 @@ export const categories = categoryRules
   })
   .filter(Boolean);
 
+// Filter and sort a copy of the catalog for Home, Products, and related-product views.
+// Home, Products සහ සම්බන්ධ භාණ්ඩ දසුන් සඳහා catalog පිටපත filter/sort කරයි.
 export const getProducts = ({ category, keyword, minPrice, maxPrice, sort } = {}) => {
   const normalizedKeyword = (keyword || '').trim().toLowerCase();
   const filteredProducts = products.filter((product) => {
@@ -147,4 +182,6 @@ export const getProducts = ({ category, keyword, minPrice, maxPrice, sort } = {}
 
 export const getProductById = (id) => products.find((product) => product._id === id);
 
+// Use one locale-aware LKR formatter across product, cart, and order screens.
+// product, cart සහ order පිටුවල එකම locale-aware LKR formatter එක භාවිත කරයි.
 export const formatLkr = (amount) => `LKR ${Number(amount || 0).toLocaleString('en-LK')}`;

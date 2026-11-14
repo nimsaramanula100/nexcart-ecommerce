@@ -3,6 +3,8 @@ import { User, Mail, Phone, MapPin, Save, ShieldCheck, Check } from 'lucide-reac
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 
+// Account profile: edits controlled personal/address fields and delegates persistence to AuthContext.
+// ගිණුම් පැතිකඩ: පාලිත පුද්ගලික/ලිපින අගයන් සංස්කරණය කර AuthContext හරහා සුරකියි.
 const Profile = () => {
   const { user, updateProfile } = useAuth();
   const { showToast } = useCart();
@@ -23,10 +25,13 @@ const Profile = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
 
+  // A shared input handler maps each named field into the form state / input name එක අනුව form state යාවත්කාලීන කරයි.
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Assemble nested address data, optionally include a password, and surface the context result.
+  // nested ලිපින දත්ත සකසා අවශ්‍ය නම් password එක් කර context ප්‍රතිඵලය පෙන්වයි.
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUpdating(true);

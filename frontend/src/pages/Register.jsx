@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Lock, Mail, User, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
+// Registration page: validates matching passwords before AuthContext creates and persists the account.
+// ලියාපදිංචි පිටුව: AuthContext ගිණුම සෑදීමට පෙර password දෙක ගැළපේද පරීක්ෂා කරයි.
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -12,6 +14,8 @@ const Register = () => {
   const { register, loading } = useAuth();
   const navigate = useNavigate();
 
+  // Keep validation and API error feedback local, while successful registration updates shared auth state.
+  // validation/API දෝෂ මෙහි පෙන්වා සාර්ථක වූ විට පොදු auth state යාවත්කාලීන කරයි.
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {

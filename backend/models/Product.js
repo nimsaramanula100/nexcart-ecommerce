@@ -1,3 +1,4 @@
+// EN: Product schema captures catalogue details, stock, ratings, and merchandising flags; SI: catalogue විස්තර, තොගය, ratings සහ merchandising flags Product schema තුළ තබයි.
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema(

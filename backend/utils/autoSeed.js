@@ -1,9 +1,11 @@
+// EN: Populate empty MongoDB category/product collections from the shared demo dataset; SI: පොදු demo දත්ත භාවිතයෙන් හිස් MongoDB category/product collections පුරවයි.
 const Category = require('../models/Category');
 const Product = require('../models/Product');
 const store = require('../config/inMemoryStore');
 
 const autoSeed = async () => {
   try {
+    // EN: Skip database seeding when controllers are using the JavaScript store; SI: controllers JavaScript store භාවිත කරන විට database seeding මඟහරියි.
     if (global.IS_IN_MEMORY_MODE) return;
 
     const categoryCount = await Category.countDocuments();
@@ -21,6 +23,7 @@ const autoSeed = async () => {
 
     const productCount = await Product.countDocuments();
     if (productCount === 0) {
+      // EN: Resolve category names to Mongo IDs before inserting related products; SI: සම්බන්ධිත products ඇතුළත් කිරීමට පෙර category නාම Mongo ID වෙත පරිවර්තනය කරයි.
       console.log('[AutoSeed] Seeding initial products into MongoDB...');
       const createdCategories = await Category.find({});
       const categoryMap = {};

@@ -4,11 +4,15 @@ import { Package, Clock, ChevronDown, ChevronUp, MapPin, CreditCard, ArrowRight 
 import API from '../services/api';
 import { formatLkr } from '../data/localCatalog';
 
+// Customer order history: fetches the signed-in user's orders and expands each row for shipment details.
+// පාරිභෝගික order ඉතිහාසය: පිවිසි පරිශීලකයාගේ orders ලබාගෙන බෙදාහැරීම් විස්තර පෙන්වීමට විහිදුවයි.
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedOrderId, setExpandedOrderId] = useState(null);
 
+  // The protected route supplies authentication; the API client attaches its saved token.
+  // ආරක්ෂිත route එක login සහතික කරයි; API client සුරැකි token එක එක් කරයි.
   useEffect(() => {
     const fetchMyOrders = async () => {
       try {
@@ -24,10 +28,13 @@ const Orders = () => {
     fetchMyOrders();
   }, []);
 
+  // Only one order's detail drawer is open at a time / එකවර එක් order විස්තරයක් පමණක් විවෘත වේ.
   const toggleExpand = (id) => {
     setExpandedOrderId(expandedOrderId === id ? null : id);
   };
 
+  // Map server status strings to the corresponding visual badge variant.
+  // server status අගය අනුරූප badge පෙනුමට සම්බන්ධ කරයි.
   const getStatusBadge = (status) => {
     switch (status) {
       case 'Delivered': return <span className="badge badge-success">Delivered</span>;

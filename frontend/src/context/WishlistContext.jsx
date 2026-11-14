@@ -2,8 +2,12 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const WishlistContext = createContext();
 
+// Read-only consumer hook for components that need shared saved-product state.
+// පොදු කැමති භාණ්ඩ තත්ත්වය අවශ්‍ය components සඳහා consumer hook එක.
 export const useWishlist = () => useContext(WishlistContext);
 
+// Wishlist provider persists saved products and offers add/remove/toggle helpers.
+// Wishlist provider සුරැකි භාණ්ඩ persist කර add/remove/toggle helper සපයයි.
 export const WishlistProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState(() => {
     try {
@@ -19,6 +23,7 @@ export const WishlistProvider = ({ children }) => {
     localStorage.setItem('nexcart_wishlist', JSON.stringify(Array.isArray(wishlist) ? wishlist : []));
   }, [wishlist]);
 
+  // Avoid duplicate IDs before adding a product / එකම ID ඇති භාණ්ඩ නැවත එකතු නොකරයි.
   const addToWishlist = (product) => {
     setWishlist((prev) => {
       const safePrev = Array.isArray(prev) ? prev : [];

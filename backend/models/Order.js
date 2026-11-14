@@ -1,3 +1,4 @@
+// EN: Order schema stores purchased item snapshots, shipping/payment data, and fulfillment state; SI: මිලදීගත් භාණ්ඩ snapshot, shipping/payment දත්ත සහ fulfilment තත්ත්වය Order schema තුළ තබයි.
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema(

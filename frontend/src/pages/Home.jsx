@@ -13,6 +13,8 @@ import {
 import ProductCard from '../components/ProductCard';
 import { categories, getProducts } from '../data/localCatalog';
 
+// Home landing page: builds promotional sections from the shared local catalog and ProductCard component.
+// මුල් පිටුව: පොදු දේශීය catalog සහ ProductCard භාවිතයෙන් ප්‍රවර්ධන කොටස් සකසයි.
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [trendingProducts, setTrendingProducts] = useState([]);
@@ -20,9 +22,12 @@ const Home = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Flash Sale Countdown State
+  // Countdown state drives the visible timer independently of the catalog data.
+  // countdown state එක catalog දත්තවලින් ස්වාධීනව පෙනෙන වේලාව පාලනය කරයි.
   const [timeLeft, setTimeLeft] = useState({ hours: 7, minutes: 42, seconds: 18 });
 
+  // Tick once per second and clean up the interval when the page unmounts.
+  // සෑම තත්පරයකම අගය වෙනස් කර පිටුව ඉවත් වන විට interval එක නවතයි.
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -35,6 +40,8 @@ const Home = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // Select featured/trending/new products and categories from localCatalog for the page sections.
+  // පිටු කොටස් සඳහා localCatalog වෙතින් featured/trending/new භාණ්ඩ සහ කාණ්ඩ තෝරයි.
   useEffect(() => {
     const products = getProducts();
     setFeaturedProducts(products.filter((product) => product.isFeatured).slice(0, 8));

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Browser document shell: metadata/fonts are loaded here before React mounts at #root.
+         බ්‍රවුසර ලේඛන සැකිල්ල: React #root තුළ ආරම්භ වීමට පෙර metadata සහ අකුරු සකසයි. -->
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +13,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   </head>
   <body>
+    <!-- main.jsx mounts the complete routed React application into this element.
+         main.jsx සම්පූර්ණ React යෙදුම මෙම element එක තුළ ආරම්භ කරයි. -->
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
